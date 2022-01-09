@@ -1,5 +1,7 @@
 # Web Application Quickstart (Node version)
 
+---
+
 ### Overview
 
 Web app sample configuration based on Node, Express.js and various other packages that can be cloned and modified as a faster means of starting new projects.  
@@ -14,6 +16,8 @@ One of the unique aspects of this architecture is the **model folder** of projec
 
 Run the following commands after cloning this repository.
 
-1. cd server
-2. npm install
+1. `cd web-application-quickstart-node\src\server\`
+2. `npm install`
+
+The post install script will transpile and start the application.
 
