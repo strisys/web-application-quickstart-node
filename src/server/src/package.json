@@ -6,6 +6,7 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
+    "postinstall": "npm-run-all start",
     "install-core-packages-fs": "npm install file:../../model/server/src --force --no-save",
     "clean-js": "rimraf ./js",
     "tsc": "tsc",
