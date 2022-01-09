@@ -11,12 +11,9 @@
     "tsc": "tsc",
     "run-browser": "start http://localhost:3000/api/v1/customers",
     "run-server": "node ./js/index.js",
-    "run-seed": "node ./js/scripts/seed.js",
     "start": "npm-run-all --parallel transpile run-browser --sequential run-server",
-    "start-full": "npm-run-all seed start",
     "transpile": "npm-run-all clean-js install-core-packages-fs tsc",
-    "mocha": "mocha --reporter spec ./js/test/**/*.spec.js",
-    "seed": "npm-run-all install-core-packages-fs transpile run-seed"
+    "mocha": "mocha --reporter spec ./js/test/**/*.spec.js"
   },
   "author": "Stephen Trudel",
   "license": "ISC",
