@@ -1,6 +1,7 @@
 import { Customer, ICustomerState  } from 'model-core';
 export { Customer, ICustomerState  };
 
+// This is data that would come from a document or relational database
 const cache: ICustomerState[] = [{
   id: '1',
   name: 'Elon Musk',
