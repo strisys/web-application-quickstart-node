@@ -10,18 +10,18 @@ This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_de
 
 At a high-level, the major components of this architecture are simply as follows.
 
-- [model](./src/model)
-	- core
-	- server
-	- client 
-- [server](./src/server)
-- [ui](./src/ui)
+- [**model**](./src/model)
+	- [**core**](./src/model/core/src)
+	- [**server**](./src/model/server/src)
+	- [**client**](./src/model/client/src)
+- [**server**](./src/server)
+- [**ui**](./src/ui)
 
 This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) by virtue of the model set of projects that can be found in the [model module](./src/model).  
 
-- **core** - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, etc. 
-- **server** - Depends on model core and is a dependency of the [API server](./src/server).  This module hydrates model core entities from data sources such as document and/or relational databases.  Its general usage is a server context and thus the name "server".
-- **client** - Depends on model core and is a dependency of [UI](./src/ui). This module hydrates model core entities from data sources such as REST APIs and/or web sockets.  Its general usage is to run in a client context such as a browser thus the name "client".
+- [**core**](./src/model/core/src) - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, reports, etc. In practice, this module is often further decomposed between entity and query (reporting) concerns.
+- [**server**](./src/model/server/src) - Depends on model core and is a dependency of the [API server](./src/server).  This module hydrates model core entities from data sources such as document and/or relational databases.  Its general usage is a server context and thus the name "server".
+- [**client**](./src/model/client/src) - Depends on model core and is a dependency of [UI](./src/ui). This module hydrates model core entities from data sources such as REST APIs and/or web sockets.  Its general usage is to run in a client context such as a browser thus the name "client".
 
 Some benefits, among many, of this approach are as follows:
 
