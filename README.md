@@ -14,8 +14,8 @@ At a high-level, the major components of this architecture are simply as follows
 	- [**core**](./src/model/core/src)
 	- [**server**](./src/model/server/src)
 	- [**client**](./src/model/client/src)
-- [**server**](./src/server)
-- [**ui**](./src/ui)
+- [**server**](./src/server/src)
+- [**ui**](./src/ui/src)
 
 This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) by virtue of the model set of projects that can be found in the [model module](./src/model).  
 
