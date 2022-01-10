@@ -4,7 +4,7 @@
 
 ### Overview
 
-This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, based on [Node](https://nodejs.org), [Express.js](http://expressjs.com/) and various other packages, that can be cloned and modified as needed.  
+This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/)), that can be used to start a new project or simply to anchor a discussion.  
 
 #### DDD
 
@@ -19,7 +19,7 @@ At a high-level, the major components of this architecture are simply as follows
 
 This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) by virtue of the model set of projects that can be found in the [model module](./src/model).  
 
-- [**core**](./src/model/core/src) - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, reports, etc. In practice, this module is often further decomposed between entity and query (reporting) concerns.
+- [**core**](./src/model/core/src) - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, reports, etc. In practice, this module is often further decomposed between entity and query (reporting) concerns.  The concepts of interest that connect the business meaning and purpose to the source code is encapsulated here.
 - [**server**](./src/model/server/src) - Depends on model core and is a dependency of the [API server](./src/server).  This module hydrates model core entities from data sources such as document and/or relational databases.  Its general usage is a server context and thus the name "server".
 - [**client**](./src/model/client/src) - Depends on model core and is a dependency of [UI](./src/ui). This module hydrates model core entities from data sources such as REST APIs and/or web sockets.  Its general usage is to run in a client context such as a browser thus the name "client".
 
