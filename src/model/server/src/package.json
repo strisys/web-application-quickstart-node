@@ -6,13 +6,13 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
-    "install-core-packages-fs": "npm install file:../../core/src --force --no-save",
+    "install-core-packages-fs": "npm install file:../../core/src --force",
     "clean-js": "rimraf ./js",
-    "postinstall": "npm-run-all test",
     "tsc": "tsc",
-    "transpile": "npm-run-all clean-js install-core-packages-fs tsc",
+    "transpile": "npm-run-all clean-js tsc",
     "mocha": "mocha --reporter spec ./js/test/**/*.spec.js",
-    "test": "npm-run-all transpile mocha"
+    "test": "npm-run-all transpile mocha",
+    "postinstall": "npm-run-all test"
   },
   "author": "Stephen Trudel",
   "license": "ISC",
@@ -25,5 +25,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "~4.5.4"
+  },
+  "dependencies": {
+    "model-core": "file:../../core/src"
   }
 }

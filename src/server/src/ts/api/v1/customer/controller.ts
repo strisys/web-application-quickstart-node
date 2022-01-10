@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
-import { CustomerRepository } from 'model-server';
+import { CustomerRepository, Customer } from 'model-server';
 
 export class CustomerController {
   public get(req: Request, res: Response): void {
     res.status(httpStatus.OK);
 
     const entities = (new CustomerRepository()).get();
-    const state = entities.map((e) => e.state);
+    const state = entities.map((e: Customer) => e.state);
 
     res.jsonp(state);
   }

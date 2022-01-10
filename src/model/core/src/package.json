@@ -6,8 +6,8 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
-    "clean-js": "rimraf ./js",
     "postinstall": "npm-run-all test",
+    "clean-js": "rimraf ./js",
     "tsc": "tsc",
     "transpile": "npm-run-all clean-js tsc",
     "mocha": "mocha --reporter spec ./js/test/**/*.spec.js",
