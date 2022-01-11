@@ -34,10 +34,12 @@ On Windows, run the following commands after cloning this repository.  Because t
 
 1. `cd web-application-quickstart-node\src\model\core\src`
 2. `npm install`
-3. `cd ..\..\server\src`
+3. `cd ..\..\model\src`
 4. `npm install`
-5. `cd ..\..\..\server\src`
+5. `cd ..\..\server\src`
 6. `npm install`
+7. `cd ..\..\..\server\src`
+8. `npm install`
 
 The post install npm script related to the final step will run the application and display customer data in the browser.
 
