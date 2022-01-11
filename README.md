@@ -30,7 +30,7 @@ Some benefits, among many, of this approach are as follows:
 
 ### To Run
 
-On Windows, run the following commands after cloning this repository.  Because this is a mono repo, the packages will have to be set up separately.
+On Windows, run the following commands after cloning this repository.  Because this is a mono repo, the packages will have to be set up separately.  The [`install.ps1`](./src/server/src/install.ps1) under [`/src/server/src`](./src/server/src) will run `npm install` for all projects or you can run manually as follows.
 
 1. `cd web-application-quickstart-node\src\model\core\src`
 2. `npm install`
@@ -39,5 +39,7 @@ On Windows, run the following commands after cloning this repository.  Because t
 5. `cd ..\..\..\server\src`
 6. `npm install`
 
-The post install npm script related to the final step will run the application and display customer data in the browser.
+A couple of other things to note are as follows.
 
+- This was tested on Node `v16.13.1` 
+- The post install npm script related to the final step will run the application and display customer data in the browser.
