@@ -41,5 +41,5 @@ On Windows, run the following commands after cloning this repository.  Because t
 
 A couple of other things to note are as follows.
 
-- This was tested on Node `v16.13.1` 
+- This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/) 
 - The post install npm script related to the final step will run the application and display customer data in the browser.
