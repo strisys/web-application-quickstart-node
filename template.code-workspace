@@ -11,6 +11,11 @@
 		}
 	],
 	"settings": {
-		"vscode-corda.isCordaProject": false
+		"vscode-corda.isCordaProject": false,
+		"files.exclude": {
+			"**/.vscode": true,
+			"**/node_modules": true,
+			"**/src/js": true
+		}
 	}
 }
