@@ -28,18 +28,6 @@ Some benefits, among many, of this approach are as follows:
 1. **Reuse** - Code is shared between [UI](./src/ui) and [API server](./src/server) via the model core.  A calculation, for example, can be done on either the client or server assuming both have the same model core code and data without the need for either to talk to each other.
 2. **Testability** - The first calling client to logic isolated to the model set of projects is a test suite like [Mocha](https://mochajs.org/).  There should be no need to run the application to assert on the correctness of the modules.  
 
-### To Run
+### To Install & Run
 
-On Windows, run the following commands after cloning this repository.  Because this is a mono repo, the packages will have to be set up separately.  The [`install.ps1`](./src/server/src/install.ps1) under [`/src/server/src`](./src/server/src) will run `npm install` for all projects or you can run manually as follows.
-
-1. `cd web-application-quickstart-node\src\model\core\src`
-2. `npm install`
-3. `cd ..\..\server\src`
-4. `npm install`
-5. `cd ..\..\..\server\src`
-6. `npm install`
-
-A couple of other things to note are as follows.
-
-- This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/) 
-- The post install npm script related to the final step will run the application and display customer data in the browser.
+Run [`install.ps1`](./install.ps1) which will run `npm install` for all packages.  This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/).
