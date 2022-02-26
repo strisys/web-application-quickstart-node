@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "src\\server"
+		},
+		{
+			"path": "src\\model"
+		},
+		{
+			"path": "src\\ui"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.vscode": true,
+			"**/node_modules": true,
+			"**/src/js": true
+		}
+	}
+}
