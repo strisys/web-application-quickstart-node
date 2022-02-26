@@ -6,7 +6,7 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
-    "install-core-packages-fs": "npm install file:../../model/server/src --force --no-save",
+    "install-core-packages-fs": "npm install file:../../model/server --force --no-save",
     "clean-js": "rimraf ./js",
     "tsc": "tsc",
     "run-browser": "start http://localhost:3000/api/v1/customers",
