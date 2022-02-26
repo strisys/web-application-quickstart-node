@@ -14,6 +14,8 @@ const cache: ICustomerState[] = [{
 
 export class CustomerRepository {
   public get(): Customer[] {
+    // fetch('/')//
+
     return Customer.from(cache);
   }
 
