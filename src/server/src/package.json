@@ -6,12 +6,11 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
-    "postinstall": "npm-run-all start",
     "install-core-packages-fs": "npm install file:../../model/server/src --force --no-save",
     "clean-js": "rimraf ./js",
     "tsc": "tsc",
     "run-browser": "start http://localhost:3000/api/v1/customers",
-    "run-server": "node ./js/index.js",
+    "run-server": "start node ./js/index.js",
     "start": "npm-run-all --parallel install-core-packages-fs transpile run-browser --sequential run-server",
     "transpile": "npm-run-all clean-js tsc",
     "mocha": "mocha --reporter spec ./js/test/**/*.spec.js"
