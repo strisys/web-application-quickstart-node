@@ -6,7 +6,7 @@
   "typings": "./js/index.d.ts",
   "private": true,
   "scripts": {
-    "install-core-packages-fs": "npm install file:../../core/src --force",
+    "install-core-packages-fs": "npm install file:../../core --force",
     "clean-js": "rimraf ./js",
     "tsc": "tsc",
     "transpile": "npm-run-all clean-js tsc",
@@ -27,6 +27,6 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
-    "model-core": "file:../../core/src"
+    "model-core": "file:../../core"
   }
 }

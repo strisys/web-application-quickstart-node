@@ -1,9 +1,9 @@
 # model core
-cd .\src\model\core\src
+cd .\src\model\core
 npm install
 
 # model core
-cd ..\..\server\src
+cd ..\server\src
 npm install
 
 # model.client
