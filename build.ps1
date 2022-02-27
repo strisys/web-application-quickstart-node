@@ -8,8 +8,7 @@ npm install
 
 # model.client
 cd ..\..\client\src
-# rmdir node_modules\ /S /Q
-# npm install
+npm install
 
 cd ..\..\..\server\src
 npm install
