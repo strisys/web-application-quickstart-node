@@ -15,7 +15,7 @@
     "test": "npm-run-all transpile mocha",
     "run-server": "concurrently \"cd ../server && npm run run-server && cd ../..\"",
     "run-browser": "start http://localhost:3000",
-    "start": "npm-run-all --parallel run-server run-browser"
+    "start": "npm-run-all transpile --parallel run-server run-browser"
   },
   "author": "Stephen Trudel",
   "license": "ISC",
