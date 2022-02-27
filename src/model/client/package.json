@@ -6,10 +6,12 @@
   "typings": "./src/js/index.d.ts",
   "private": true,
   "scripts": {
-    "install-core-packages-fs": "npm install file:../core --force",
+    "transpile-packages": "concurrently \"cd ../core && npm run transpile && cd ../client\"",
+    "install-packages-core": "npm install file:../core --force",
+    "install-packages": "npm-run-all transpile-packages install-packages-core",
     "clean-js": "rimraf ./src/js",
     "tsc": "tsc",
-    "transpile": "npm-run-all clean-js tsc",
+    "transpile": "npm-run-all install-packages clean-js tsc",
     "mocha": "mocha --reporter spec ./src/js/test/**/*.spec.js",
     "test": "npm-run-all transpile mocha",
     "postinstall": "npm-run-all test"
@@ -20,6 +22,7 @@
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "chai": "^4.3.4",
+    "concurrently": "^7.0.0",
     "mocha": "^9.1.3",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
