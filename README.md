@@ -30,4 +30,10 @@ Some benefits, among many, of this approach are as follows:
 
 ### To Install & Run
 
-Run [`install.ps1`](./install.ps1) which will run `npm install` for all packages.  This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/).
+On Windows:
+
+	> git clone https://github.com/strisys/web-application-quickstart-node.git
+	> cd web-application-quickstart-node\
+	> powershell ./install.ps1
+
+This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/).
