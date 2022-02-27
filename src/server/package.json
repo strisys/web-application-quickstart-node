@@ -14,6 +14,7 @@
     "run-browser": "start http://localhost:3000/api/v1/customers",
     "run-server": "start node ./src/js/index.js",
     "mocha": "mocha --reporter spec ./src/js/test/**/*.spec.js",
+    "postinstall": "npm-run-all test",
     "test": "npm-run-all transpile mocha",
     "start": "npm-run-all --parallel transpile run-browser --sequential run-server"
   },
