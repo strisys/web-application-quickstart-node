@@ -1,26 +1,22 @@
-import { Customer, ICustomerState  } from 'model-core';
-export { Customer, ICustomerState  };
+import { Customer, ICustomerState } from 'model-core';
+export { Customer, ICustomerState };
+import axios from 'axios';
 
-// This is data that would come from a document or relational database
-const cache: ICustomerState[] = [{
-  id: '1',
-  name: 'Elon Musk',
-  address: '1 EV Way'
-}, {
-  id: '2',
-  name: 'Bill Gates',
-  address: '2 Software Way'
-}];
+// const fetchApi = ((process) ? (import('node-fetch')) : fetch);
+axios.defaults.baseURL = 'http://localhost:3000';
 
 export class CustomerRepository {
-  public get(): Customer[] {
-    // fetch('/')//
+  public async get(): Promise<Customer[]> {
+    const response = (await axios.get('/api/v1/customers'));
+    const entities = ((await response.data) as ICustomerState[]);
 
-    return Customer.from(cache);
+    return Customer.from(entities);
   }
 
-  public getOne(id: string): Customer {
-    const state = cache.find((c) => {
+  public async getOne(id: string): Promise<Customer> {
+    const entities = (await this.get());
+
+    const state = entities.find((c) => {
       return (c.id === id);
     });
 

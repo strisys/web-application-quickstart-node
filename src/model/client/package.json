@@ -29,6 +29,7 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
+    "axios": "^0.26.0",
     "model-core": "file:../core"
   }
 }
