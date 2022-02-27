@@ -6,9 +6,8 @@
   "typings": "./src/js/index.d.ts",
   "private": true,
   "scripts": {
-    "transpile-packages": "concurrently \"cd ../core && npm run transpile && cd ../client\"",
     "install-packages-core": "npm install file:../core --force",
-    "install-packages": "npm-run-all transpile-packages install-packages-core",
+    "install-packages": "npm-run-all install-packages-core",
     "clean-js": "rimraf ./src/js",
     "tsc": "tsc",
     "transpile": "npm-run-all install-packages clean-js tsc",
