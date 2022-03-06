@@ -1,3 +1,5 @@
-import { Pipeline } from './pipeline';
+import { PipelineService } from './pipeline/pipeline-service';
 
-(new Pipeline().configure()).start();
+(new PipelineService()).start();
+
+export { };

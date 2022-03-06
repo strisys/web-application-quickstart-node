@@ -1,6 +1,10 @@
 {
   "files.exclude": {
     "**/js": true,
-    "**/scripts": true
+    "**/scripts": true,
+    "**/public": true,
+    ".editorconfig": true,
+    ".eslintrc.js": true,
+    ".gitignore": true
   }
 }

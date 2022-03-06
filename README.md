@@ -1,4 +1,4 @@
-# Web Application Quickstart using DDD (Node version)
+# Full Stack Web Application Quickstart using DDD (Node version)
 
 ---
 
@@ -25,8 +25,18 @@ This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven
 
 Some benefits, among many, of this approach are as follows:
 
-1. **Reuse** - Code is shared between [UI](./src/ui) and [API server](./src/server) via the model core.  A calculation, for example, can be done on either the client or server assuming both have the same model core code and data without the need for either to talk to each other.
+1. **Reuse** - Code is shared between [ui](./src/ui) and [server](./src/server) via the model core.  A calculation, for example, can be done on either the client or server assuming both have the same [model core code](./src/model/core/src) and data without the need for either to talk to each other.
 2. **Testability** - The first calling client to logic isolated to the model set of projects is a test suite like [Mocha](https://mochajs.org/).  There should be no need to run the application to assert on the correctness of the modules.  
+
+In the event there is *no server*, the application is a *pure client application* that will run in a browser much like a single page web application (SPA).  Though not recommended, this architecture can be changed to the following to simplify things to one root module.
+
+- ui
+	- model
+		- core
+		- client
+	- views
+
+Notice that `server` goes as does `model.server`.  The remainder of `model` will be embedded in `ui` yet still separated from `views`.  Its possible for browser-specific concerns to leak into the model so this is something that should be considered.
 
 ### To Install & Run
 
@@ -34,6 +44,6 @@ On Windows:
 
 	> git clone https://github.com/strisys/web-application-quickstart-node.git
 	> cd web-application-quickstart-node\
-	> powershell ./build.ps1
+	> build
 
 This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/).

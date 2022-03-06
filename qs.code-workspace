@@ -8,7 +8,7 @@
 		},
 		{
 			"path": "src\\ui"
-		}
+		},
 	],
 	"settings": {
 		"files.exclude": {

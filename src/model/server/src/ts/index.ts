@@ -1,2 +1,2 @@
-import { CustomerRepository, Customer, ICustomerState } from './customer-repository';
-export { CustomerRepository, Customer, ICustomerState };
+export * from 'model-core';
+export { TaskRepository } from './task';

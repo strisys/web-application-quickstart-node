@@ -1,2 +1,2 @@
-import { Customer, ICustomerState } from './customer';
-export { Customer, ICustomerState }
+export * from './debug';
+export { Task, ITaskState } from './task';
