@@ -10,7 +10,7 @@
     "clean-js": "rimraf ./src/js",
     "tsc": "tsc",
     "transpile": "npm-run-all install-packages clean-js tsc",
-    "run-browser": "start http://localhost:3000/api/v1.0/tasks",
+    "run-browser": "start http://localhost:3000/api/v1.0/query/sales",
     "run-server": "start node ./src/js/index.js",
     "mocha": "mocha --reporter spec ./src/js/test/**/*.spec.js",
     "postinstall": "npm-run-all test",
@@ -32,7 +32,6 @@
   "devDependencies": {
     "@types/chai": "^4.3.0",
     "@types/cookie-parser": "^1.4.2",
-    "@types/dotenv": "^8.2.0",
     "@types/express": "~4.17.13",
     "@types/express-session": "^1.17.4",
     "@types/mocha": "^9.0.0",

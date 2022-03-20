@@ -1,6 +1,7 @@
 import { Application, Request, Response, NextFunction } from 'express';
 import { getLogger } from 'model-server';
 import { map } from '../api/router-map';
+import { configure } from './cors';
 
 const logger = getLogger('router-map-service');
 
@@ -11,6 +12,8 @@ export const set = (app: Application): Application => {
     res.header('Pragma', 'no-cache');
     next();
   });
+
+  configure(app);
     
   const routes = Object.keys(map);
   logger(`configuring api routes: ${routes}`);
