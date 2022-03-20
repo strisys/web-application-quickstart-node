@@ -13,7 +13,6 @@ const WebpackBar = require('webpackbar');
 
 // Version
 const packagejson = require('./package.json');
-// const { config } = require('webpack');
 const version = JSON.stringify(packagejson.version);
 console.log(`application version: ${version}`);
 
@@ -21,10 +20,17 @@ const getPath = (paths, folder, fileOrPath) => {
   return path.resolve(paths[folder], fileOrPath);
 };
 
-const getPaths = (isProd) => {
-  const targetBuildPath = ((isProd) ? './build' : './build');
+const tryParseBoolean = (argv, name) => {
+  const val = argv.env[name];
+  return Boolean(val && JSON.parse(val));
+};
 
-  console.log(`WebPack mode: ${(isProd ? 'production' : 'development')} [path:=${targetBuildPath}]`);
+const getPaths = (argv) => {
+  const isProd = (argv.mode === 'production');
+  const isWatch = tryParseBoolean(argv, 'WEBPACK_WATCH');
+  const targetBuildPath = ((isWatch) ? '../../server/public' : './build');
+
+  console.log(`argv: ${JSON.stringify(argv)}, path:=${targetBuildPath}]`);
 
   let paths = Object.create({ 'base': __dirname });
   paths.build = path.resolve(paths.base, `${targetBuildPath}`);
@@ -159,13 +165,15 @@ const getConfig = (isProd) => {
   return ((isProd) ? merge(wpConfigDev, wpConfigProd) : wpConfigDev);
 };
 
+module.exports = (_, argv) => {
+  const config = getConfig(argv);
 
-module.exports = (args) => {
-  const isProd = (args.isProd === '1');
-  let config = getConfig(isProd);
-
-  if (args.analyze === 1) {
+  if (tryParseBoolean(argv, 'analyze')) {
     config.plugins.push(new BundleAnalyzerPlugin());
+  }
+
+  if (tryParseBoolean(argv, 'print')) {
+    console.info(JSON.stringify(config));
   }
 
   return config;

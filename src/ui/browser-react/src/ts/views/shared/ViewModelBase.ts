@@ -6,31 +6,40 @@ interface IDiposable {
 
 export type KeyValuePairType = { [key:string]: any };
 
+export type Genesis = ('genesis');
+export const GENESIS: Genesis = 'genesis';
+
 const logger = getLogger('shared-viewmodelbase');
-const seriesMap = new Map<string, any>();
+
+const seriesHeadMap = new Map<string, any>();
+let seriesCounter = 0;
 
 export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDiposable {
   protected _state: KeyValuePairType = {};
   private readonly _seriesName: string;
   protected _observeTransition: (vw: V) => void = null;
   private _isDisposed = false;
+  private _isSeriesGenesis: boolean;
   private _transitionName: string;
   private _version = 0;
     
-  protected constructor(seriesName: string, observeTransition: (vw: V) => void, transitionName: string = 'start') {
+  protected constructor(seriesName: string, observeTransition: (vw: V) => void, transitionName: (string | Genesis) = GENESIS) {
     if (!seriesName) {
       throw new Error(`Failed to instantiate view model.  No series name specified.  The series name is used to validate objects created in a sequence as state transitions need to be in order.`);
     }
 
-    this._seriesName = seriesName.trim().toLowerCase();
-    this._transitionName = (transitionName || 'unknown').trim().toLowerCase();
+    this._transitionName = (transitionName || GENESIS).trim().toLowerCase();
+    this._isSeriesGenesis = (this._transitionName === GENESIS);
     this._observeTransition = observeTransition;
+    this._seriesName = seriesName;
 
-    if (!seriesMap.has(seriesName)) {
-      seriesMap.set(seriesName, this);
+    if (this._isSeriesGenesis) {
+      this._seriesName = `${seriesName}-${++seriesCounter}`;
+      logger(`tracking new series (series:=${this._seriesName}) ...`);
     }
 
-    logger(`creating view model (series:=${this._seriesName}, transition:=${this._transitionName}) ...`);
+    seriesHeadMap.set(this._seriesName, this);
+    logger(`creating view model (series:=${this._seriesName}, isSeriesGenesis:=${this._isSeriesGenesis}, transition:=${this._transitionName}) ...`);
   }
 
   protected raiseTransitionNotification = (): void => {
@@ -43,12 +52,20 @@ export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDipo
         return;
       }
 
-      logger(`raising transition notification (transition:=${target.transitionName}, vm:=${target})`);
+      logger(`raising transition notification (series:=${this._seriesName}, transition:=${target.transitionName}, vm:=${target})`);
       target._observeTransition(target.cast());
     })
   }
 
-  protected abstract create(transitionName?: string): V;
+  protected abstract create(seriesName: string, observeTransition: (vw: V) => void, transitionName?: string): V;
+
+  protected get seriesName(): string {
+    return this._seriesName;
+  }
+
+  protected isSeriesGenesis(): boolean {
+    return this._isSeriesGenesis;
+  }
 
   private cast(): V {
     return ((this as unknown) as V);
@@ -70,7 +87,7 @@ export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDipo
     }
 
     const nextVal = this.createNext(transitionName);
-    logger(`setting state on next view model in series (transition:=${transitionName}) ...`);    
+    logger(`setting state on next view model in series (series:=${this._seriesName}, transition:=${transitionName}) ...`);    
     nextVal.tryMergeState(nextVal._state, newState)
     nextVal.raiseTransitionNotification();
 
@@ -97,27 +114,24 @@ export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDipo
     return this._version;
   }
 
-  private validateTransition = (next: V): V => {
-    const expected = seriesMap.get(this._seriesName);
+  private validateHead = (): ViewModelBase<V> => {
+    const head = seriesHeadMap.get(this._seriesName);
 
-    if (this._version === expected._version) {
-      return next;
+    if (this._version === head._version) {
+      return this;
     }
 
-    throw new Error(`Failed to transition to the next view model in series. Cannot transition from current view model since its NOT the latest version (series:=${this._seriesName}, transition:=${this._transitionName}, (version:=${this._version} !== expected:=${expected._version}) ).`)
+    throw new Error(`Failed to transition to the next view model in series. Cannot transition from current view model since its NOT the latest version (series:=${this._seriesName}, transition:=${this._transitionName}, (version:=${this._version} !== expected:=${head._version}) ).`)
   }
 
   protected createNext = (transitionName: string): V => {
-    const next = this.validateTransition(this.create(transitionName));
-    const prev = this;
-
+    const prev = this.validateHead();
+    const next = prev.create(prev._seriesName, prev._observeTransition, (transitionName || 'unknown').trim().toLowerCase());
+        
     next._state = { ...(prev._state || {}) };
-    next._transitionName = (transitionName || 'unknown').trim().toLowerCase();
-    next._observeTransition = prev._observeTransition;
     next._version = (prev._version + 1);
-    seriesMap.set(prev._seriesName, next);
 
-    logger(`creating current view model (previous:=${prev._version}, next:=${next._version})`);
+    logger(`creating head view model (series:=${prev._seriesName}, previous:=${prev._version}, next:=${next._version})`);
     prev.dispose();
 
     return next;
@@ -128,7 +142,7 @@ export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDipo
   }
 
   public toString(): string {
-    return `transition:=${this._transitionName}, version:=${this._version}, disposed:=${this._isDisposed}`
+    return `series:=${this._seriesName}, transition:=${this._transitionName}, version:=${this._version}, disposed:=${this._isDisposed}`
   }
 
   public dispose(): void {

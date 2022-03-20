@@ -4,22 +4,25 @@ import { TaskRepository, Task, getLogger } from 'model-client';
 export { Task, getLogger };
 
 export type TransitionName = ('loading' | 'loaded' | 'mark-complete');
-const seriesName = 'task-viewmodel';
-const logger = getLogger(seriesName);
+const logger = getLogger('task-management-viewmodel');
 
 export class ViewModel extends ViewModelBase<ViewModel> {
   private readonly _repository = new TaskRepository();
 
-  public constructor(observeTransition: (vw: ViewModel) => void, transitionName?: string) {
+  private constructor(seriesName: string, observeTransition: (vw: ViewModel) => void, transitionName?: string) {
     super(seriesName, observeTransition, transitionName);
+  }
+
+  public static createNew(observeTransition: (vw: ViewModel) => void): ViewModel {
+    return (new ViewModel('task-management', observeTransition));
+  }
+  
+  protected override create(seriesName: string, observeTransition: (vw: ViewModel) => void, transitionName: string): ViewModel {
+    return (new ViewModel(seriesName, observeTransition, transitionName));
   }
 
   public get entities(): Task[] {
     return (this.state['entities'] || []);
-  }
-
-  protected override create(transitionName: string): ViewModel {
-    return (new ViewModel(null, transitionName));
   }
 
   public load = async () => {

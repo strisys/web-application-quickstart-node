@@ -1,8 +1,7 @@
 {
   "files.exclude": {
-    "**/build/": false,
-    "**/public/": false,
-    "**/src/js/": false,
+    "**/build/": true,
+    "**/src/js/": true,
     "tsconfig.json": false,
     ".gitignore": true,
     "README.md": true

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { withTheme } from './views/shared/theme-factory'
-import RouteViewContainer from './views/route/ViewContainer';
+import RouteViewContainer from './views/shared/navigation/RouterViewContainer';
 
 const rootContent = (
   <React.StrictMode>
