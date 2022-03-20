@@ -1,0 +1,12 @@
+/* TEAM */
+	Full-stacker: Stephen Trudel
+	Email: fullstack@stephentrudel.com
+	From: USA
+
+/* THANKS */
+
+/* SITE */
+	Last update: 2022/03/15
+	Language: ENG
+	Doctype: HTML5
+	IDE: VSCode
