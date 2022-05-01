@@ -6,6 +6,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
+import CropFreeTwoToneIcon from '@mui/icons-material/CropFreeTwoTone';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,7 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { NavLink, useNavigate } from "react-router-dom";
 import { menuList, MenuItem } from './RouteList';
 
-type EventType = ('menuItemSelected' | 'drawerOpen' | 'drawerClose');
+type EventType = ('menuItemSelected' | 'drawerOpen' | 'drawerClose' | 'fullScreen');
 
 function DrawerMenuList(props: { onEvent: (e: any, name: EventType) => void }) {  
   let navigate = useNavigate();
@@ -48,8 +50,11 @@ function NavigationAppBar(props: { onEvent: (e: any, name: EventType) => void}) 
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             <NavLink style={{ color:'inherit', textDecoration: 'inherit' }} to={`/`}>My App</NavLink>
           </Typography>
-          <IconButton onClick={(e) => props.onEvent(e, 'drawerOpen')}  size='large'edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
-            <MenuIcon />
+          <IconButton onClick={(e) => props.onEvent(e, 'drawerOpen')}  size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
+            <MenuTwoToneIcon />
+          </IconButton>
+          <IconButton onClick={(e) => props.onEvent(e, 'fullScreen')}  size='large' edge='start' color='inherit' aria-label='full-screen' sx={{ mr: 2 }}>
+            <CropFreeTwoToneIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -59,6 +64,7 @@ function NavigationAppBar(props: { onEvent: (e: any, name: EventType) => void}) 
 
 function NavigationBar(props: { children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal; }) {  
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [fullScreen, setFullScreen] = React.useState(false);
 
   const onEvent = (_, name: EventType) => {
     if (name.startsWith('drawer')) {
@@ -70,6 +76,21 @@ function NavigationBar(props: { children: boolean | React.ReactChild | React.Rea
         clearTimeout(handle);
         setDrawerOpen(false);
       }, 700);
+    }
+
+    if (name === 'fullScreen') {
+      const handle = setTimeout(() => {
+        clearTimeout(handle);
+        
+        const element = document.querySelector("body");
+        setFullScreen(!fullScreen);
+
+        if (!fullScreen) {
+          return element?.requestFullscreen();
+        }
+
+        return document.exitFullscreen();
+      }, 100);
     }
   }
 
