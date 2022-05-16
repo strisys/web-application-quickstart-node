@@ -20,3 +20,4 @@ npm install
 npm start
 
 cd ..\..\..\
+pause

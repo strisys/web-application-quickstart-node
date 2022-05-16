@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Task, TransitionName, getLogger } from './ViewModel';
 
-function TaskView({ entity, onEvent }: { entity: Task, onEvent: (eventName: TransitionName, data: any) => void }) {
+function CardView({ entity, onEvent }: { entity: Task, onEvent: (eventName: TransitionName, data: any) => void }) {
   const logger = getLogger('task-view-list');
   logger(`component function invoked (vm:=${JSON.stringify(entity)})`);
 
@@ -29,12 +29,12 @@ function TaskView({ entity, onEvent }: { entity: Task, onEvent: (eventName: Tran
   );
 }
 
-export function TaskListView({ entities, onEvent }: { entities: Task[], onEvent: (eventName: TransitionName, data: any) => void }) { 
+export function CardListView({ entities, onEvent }: { entities: Task[], onEvent: (eventName: TransitionName, data: any) => void }) { 
   let content = [<Typography variant='h5' component='div'>Tasks completed!</Typography>];
 
   if (entities.length > 0) {
     content = entities.map((entity) => {
-      return <TaskView key={entity.id} entity={entity} onEvent={onEvent} />
+      return <CardView key={entity.id} entity={entity} onEvent={onEvent} />
     });
   }
   

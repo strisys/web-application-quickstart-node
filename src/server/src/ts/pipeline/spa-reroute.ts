@@ -5,7 +5,7 @@ import { getLogger } from 'model-server';
 const loggerFn = getLogger('reroute');
 
 const folders = [
-  'css/icons/', '/img/background/', '/js/', '/css/', '/.well-known/'
+  '/css/', 'css/icons/', '/css/devexpress/', '/css/devexpress/21.2/', '/css/devexpress/21.2/icons', '/img/background/', '/js/', , '/.well-known/'
 ]
 
 const tryGetFolder = (req: Request): string => {

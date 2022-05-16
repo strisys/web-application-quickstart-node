@@ -1,8 +1,10 @@
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import ManageSearchTwoToneIcon from '@mui/icons-material/ManageSearchTwoTone';
+import PlaylistAddCheckTwoToneIcon from '@mui/icons-material/PlaylistAddCheckTwoTone';
+import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 
+import { SearchViewContainer } from '../../features/search/ViewContainer';
 import { TasksViewContainer } from '../../features/task-management/ViewContainer';
-import { SalesEntryContainer } from '../../features/sales/ViewContainer';
+import { SalesEntryContainer } from '../../features/sales/Container';
 import { FourOFourViewContainer }  from '../../features/404/ViewContainer';
 
 export class MenuItem {
@@ -12,8 +14,9 @@ export class MenuItem {
 
 export const routeList: MenuItem[] = [
   new MenuItem('root', 'Tasks', '/', <TasksViewContainer />, null, false),
-  new MenuItem('tasks', 'Tasks', '/tasks', <TasksViewContainer />, <InboxIcon />),
-  new MenuItem('sales', 'Sales', '/sales', <SalesEntryContainer />, <MailIcon />),
+  new MenuItem('search', 'Search', '/search', <SearchViewContainer />, <ManageSearchTwoToneIcon />),
+  new MenuItem('tasks', 'Tasks', '/tasks', <TasksViewContainer />, <PlaylistAddCheckTwoToneIcon />),
+  new MenuItem('sales', 'Sales', '/sales', <SalesEntryContainer />, <MonetizationOnTwoToneIcon />),
   new MenuItem('404', '404', '*', <FourOFourViewContainer />, null, false)
 ]
 

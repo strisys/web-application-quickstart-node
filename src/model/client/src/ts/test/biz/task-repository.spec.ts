@@ -1,5 +1,8 @@
 import { expect } from 'chai';
-import { Task, TaskRepository } from '../';
+import { Task, TaskRepository } from '../..';
+import { KVStore } from 'model-core';
+
+KVStore.current('model-client').isTesting = true;
 
 describe('TaskRepository', () => {
   describe('get', async function() {

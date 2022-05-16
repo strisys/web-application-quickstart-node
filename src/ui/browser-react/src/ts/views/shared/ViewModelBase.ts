@@ -1,4 +1,6 @@
+import { isBrowser, isMobile } from 'react-device-detect';
 import { getLogger } from 'model-client';
+export { getLogger, isBrowser, isMobile };
 
 interface IDiposable {
   dispose(): void;
@@ -135,6 +137,14 @@ export abstract class ViewModelBase<V extends ViewModelBase<V>> implements IDipo
     prev.dispose();
 
     return next;
+  }
+
+  public get isDesktopMode() {
+    return isBrowser;
+  }
+
+  public get isMobileMode() {
+    return isMobile;
   }
 
   public get isDisposed() {

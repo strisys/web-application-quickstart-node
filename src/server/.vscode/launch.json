@@ -7,6 +7,19 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Node (TS)",
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/src/ts/index.ts"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Mocha (JS)",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
       "args": [

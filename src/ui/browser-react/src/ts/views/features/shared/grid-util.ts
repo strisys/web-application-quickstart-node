@@ -1,0 +1,2 @@
+import DataGrid, { ColumnFixing, Sorting, LoadPanel, Paging, Pager, HeaderFilter, FilterPanel, Grouping, GroupPanel, StateStoring, Summary, TotalItem, Export  } from 'devextreme-react/data-grid';
+export { DataGrid, ColumnFixing, Sorting, LoadPanel, Paging, Pager, HeaderFilter, FilterPanel, Grouping, GroupPanel, StateStoring, Summary, TotalItem, Export};

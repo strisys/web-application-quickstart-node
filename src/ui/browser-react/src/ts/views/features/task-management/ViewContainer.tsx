@@ -4,7 +4,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grow from '@mui/material/Grow';
 import { ViewModel, Task, TransitionName, getLogger } from './ViewModel';
-import { TaskListView } from './ViewTask'
+import { CardListView } from './CardListView'
 
 export function TasksViewContainer() {  
   const logger = getLogger('task-view-container');
@@ -44,7 +44,7 @@ export function TasksViewContainer() {
       <Button onClick={vm.tickle}>Tickle</Button>
       <Grow in={true} timeout={1000}>
         <div style={{ margin: 50 }}>
-          <TaskListView entities={vm.entities} onEvent={onEvent} />
+          <CardListView entities={vm.entities} onEvent={onEvent} />
         </div>
       </Grow>
     </React.Fragment>

@@ -1,5 +1,8 @@
+import { KVStore } from './../../../kv';
 import { expect } from 'chai';
-import { Task, ITaskState } from '../task';
+import { Task, ITaskState } from '../../../biz';
+
+KVStore.current().isTesting = true;
 
 describe('Task', () => {
   describe('constructor', function() {

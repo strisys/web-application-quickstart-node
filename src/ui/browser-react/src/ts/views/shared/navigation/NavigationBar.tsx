@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import CropFreeTwoToneIcon from '@mui/icons-material/CropFreeTwoTone';
 import Drawer from '@mui/material/Drawer';
@@ -27,10 +26,10 @@ function DrawerMenuList(props: { onEvent: (e: any, name: EventType) => void }) {
   }
 
   return (
-    <React.Fragment>
+    <Box sx={{ minWidth: 200 }} role='presentation'>
       <List>
         {menuList.map((item) => (
-          <ListItem button key={item.name} onClick={(e) => onClick(e, item)}>
+          <ListItem key={`drawer-list-item-${item.name}`} button onClick={(e) => onClick(e, item)}>
             <ListItemIcon>
               {item.icon}
             </ListItemIcon>
@@ -38,17 +37,17 @@ function DrawerMenuList(props: { onEvent: (e: any, name: EventType) => void }) {
           </ListItem>
         ))}
       </List>
-    </React.Fragment>
+    </Box>
   );
 }
 
-function NavigationAppBar(props: { onEvent: (e: any, name: EventType) => void}) {  
+function NavigationAppBar(props: { title: string, onEvent: (e: any, name: EventType) => void}) {  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-            <NavLink style={{ color:'inherit', textDecoration: 'inherit' }} to={`/`}>My App</NavLink>
+            <NavLink style={{ color:'inherit', textDecoration: 'inherit' }} to={`/`}>{props.title}</NavLink>
           </Typography>
           <IconButton onClick={(e) => props.onEvent(e, 'drawerOpen')}  size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
             <MenuTwoToneIcon />
@@ -62,7 +61,7 @@ function NavigationAppBar(props: { onEvent: (e: any, name: EventType) => void}) 
   );
 }
 
-function NavigationBar(props: { children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal; }) {  
+function NavigationPage(props: { title: string, children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal; }) {  
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [fullScreen, setFullScreen] = React.useState(false);
 
@@ -81,7 +80,6 @@ function NavigationBar(props: { children: boolean | React.ReactChild | React.Rea
     if (name === 'fullScreen') {
       const handle = setTimeout(() => {
         clearTimeout(handle);
-        
         const element = document.querySelector("body");
         setFullScreen(!fullScreen);
 
@@ -99,16 +97,16 @@ function NavigationBar(props: { children: boolean | React.ReactChild | React.Rea
       <Drawer anchor={'right'} open={drawerOpen} onClose={(e) => onEvent(e, 'drawerClose')}>
         <DrawerMenuList onEvent={onEvent} />
       </Drawer>
-      <NavigationAppBar onEvent={onEvent} />
+      <NavigationAppBar title={props.title} onEvent={onEvent} />
       {props.children}
     </React.Fragment>
   );
 }
 
-export const withNavigation = (component: JSX.Element): JSX.Element => {
+export const withNavigation = (title: string, content: JSX.Element): JSX.Element => {
   return (
-    <NavigationBar>
-      {component}
-    </NavigationBar>
+    <NavigationPage title={title}>
+      {content}
+    </NavigationPage>
   )
 }

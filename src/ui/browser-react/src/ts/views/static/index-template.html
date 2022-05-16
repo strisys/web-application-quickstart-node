@@ -1,22 +1,27 @@
 ﻿<!doctype html>
-<html class="no-js" lang="en-us">
+<html class='no-js' lang='en-us'>
 
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title color="black">
+  <meta charset='utf-8' />
+  <meta http-equiv='x-ua-compatible' content='ie=edge' />
+  <title color='black'>
     <%= htmlWebpackPlugin.options.title %>
   </title>
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'unsafe-inline' http://localhost:*; connect-src http://localhost:* https://dc.services.visualstudio.com/v2/track; img-src 'self'; child-src 'none'; script-src 'self' 'unsafe-inline' localhost; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com;">
-  <meta name="description" content="WebApp" />
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" />
+  <meta
+    http-equiv="Content-Security-Policy' content='default-src 'self' 'unsafe-inline' http://localhost:*; connect-src http://localhost:* https://dc.services.visualstudio.com/v2/track; img-src 'self'; child-src 'none'; script-src 'self' 'unsafe-inline' localhost; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com;"">
+  <meta name='description' content='WebApp' />
+  <meta name='viewport' content='width=device-width, height=device-height, initial-scale=1' />
+  <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Roboto:400,500,700' />
 
-  <!-- <link rel="manifest" href="site.webmanifest"> -->
-  <!-- <link rel="apple-touch-icon" href="./img/shortcut-logo.png" /> -->
-  <!-- <link rel="apple-touch-icon-precomposed" href="./img/shortcut-logo.png" /> -->
-  <!-- <link rel="shortcut icon" href="./img/shortcut-logo.png" type="image/x-icon" /> -->
+  <link rel='dx-common' href='./css/devexpress/21.2/dx.common.css'>
+  <link rel='dx-theme' data-theme='generic.light' href='./css/devexpress/21.2/dx.light.css' data-active='false'> 
+  <link rel='dx-theme' data-theme='generic.dark' href='./css/devexpress/21.2/dx.dark.css' data-active='false'>
+  <link rel='dx-theme' data-theme='generic.contrast' href='./css/devexpress/21.2/dx.contrast.css' data-active='false'>
+  
+  <!-- <link rel='manifest' href='site.webmanifest'> -->
+  <!-- <link rel='apple-touch-icon' href='./img/shortcut-logo.png' /> -->
+  <!-- <link rel='apple-touch-icon-precomposed' href='./img/shortcut-logo.png' /> -->
+  <!-- <link rel='shortcut icon' href='./img/shortcut-logo.png' type='image/x-icon' /> -->
 </head>
 
 <body>

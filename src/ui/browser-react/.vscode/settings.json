@@ -2,6 +2,7 @@
   "files.exclude": {
     "**/build/": true,
     "**/src/js/": true,
+    "**/src/**/static": true,
     "tsconfig.json": false,
     ".gitignore": true,
     "README.md": true

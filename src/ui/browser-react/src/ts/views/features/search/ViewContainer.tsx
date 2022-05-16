@@ -1,18 +1,20 @@
 import React from 'react';
+import Button from '@mui/material/Button';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grow from '@mui/material/Grow';
-import { ViewModel, SalesEntryQueryResult, getLogger } from './ViewModel';
-import { SalesEntryGrid } from './ViewGridMaster';
+import { ViewModel, TransitionName, getLogger } from './ViewModel';
+import { SearchEntryView } from './ViewSearchEntry';
 
-export function SalesEntryContainer() {  
-  const logger = getLogger('sales-entry-view-container');
+export function SearchViewContainer() {  
+  const logger = getLogger('search-view-container');
+  logger(`executing component function ...`);
 
   const create = (): ViewModel => {
     const vm = ViewModel.createNew((vm: ViewModel) => {
-      logger(`setting view model component state (transition:=${vm.transitionName}, vm:=${vm}) ...`);
+      logger(`setting view model component state (event:=${vm.transitionName}, vm:=${vm}) ...`);
       setVM(vm);
-      setOpen(vm.isTransitionOneOf(['start', 'loading']));
+      setOpen(vm.isTransitionOneOf(['genisis', 'loading']));
     });
 
     vm.load();
@@ -23,7 +25,9 @@ export function SalesEntryContainer() {
   const [vm, setVM] = React.useState(create);
   const [open, setOpen] = React.useState(true);
 
-  logger(`component function invoked (vm:=${vm})`);
+  const onEvent = (eventName: TransitionName, data: any) => {
+    alert(eventName);
+  }
 
   if (open) {
     return (
@@ -35,13 +39,14 @@ export function SalesEntryContainer() {
 
   return (
     <React.Fragment>
+      <Button onClick={vm.tickle}>Tickle</Button>
       <Grow in={true} timeout={1000}>
         <div style={{ margin: 50 }}>
-          <SalesEntryGrid result={vm.result} />
+          <SearchEntryView onEvent={onEvent} />
         </div>
       </Grow>
     </React.Fragment>
-  );
+  )
 }
 
-export default SalesEntryContainer;
+export default SearchViewContainer;
