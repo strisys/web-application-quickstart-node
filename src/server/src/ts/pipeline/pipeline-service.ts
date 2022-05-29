@@ -6,7 +6,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { getLogger } from 'model-server';
-import { staticfile, publicPath, configureHealth, reroute, set as setApiRoutes } from './';
+import { staticfile, publicPath, configureHealth, reroute, set as setApiRoutes, handleError } from './';
 
 const namespace = 'pipeline-service';
 const logger = getLogger(namespace);
@@ -52,6 +52,7 @@ export class PipelineService {
     setApiRoutes(app);
     app.use(staticfile);
     app.all('*', reroute(publicPath));
+    app.use(handleError);
     app.disable(`x-powered-by`);
 
     logger(`pipeline configured successfully!`);

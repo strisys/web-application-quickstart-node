@@ -3,34 +3,37 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grow from '@mui/material/Grow';
 import { styled } from '@mui/material/styles';
+import { CenteredHorizontalFlexGrid } from '../../shared/layout/flex';
 import { Theme } from '@mui/material/styles';
 import { MasterViewModel, isBrowser, getLogger } from './ViewModel';
 import { SalesEntryMasterGrid } from './GridMaster';
 import { SalesEntryDetailGrid } from './GridDetail';
+import { Link } from '@mui/material';
 
 const RootGridBase = styled('div')(() => ({
   display: 'grid',
-  margin: '25px',
+  margin: '15px 25px 0px 25px' ,
   gridTemplateColumns: '1fr',
   gridTemplateAreas: `'a' 
                       'd' 
                       'g'
-                      'j'`,
-  height: 'calc(100vh - 130px)',
+                      'j'
+                      'l'`,
+  height: 'calc(100vh - 82px)',
   overflow: 'hidden'
 }));
 
 const topPanelHeight = ((isBrowser) ? '410' : '300');
 
 const RootGrid = styled(RootGridBase)(() => ({
-  gridTemplateRows: `0px ${topPanelHeight}px 1px auto`,
+  gridTemplateRows: `0px ${topPanelHeight}px 1px auto 30px`,
 }));
 
 const MasterGrid = styled('div')(() => ({
   height: '100%',
   width: '100%',
   gridArea: 'd',
-  overflow: 'auto'
+  overflow: 'auto',
 }));
 
 const CenterLineSection = styled('div')(({ theme }: { theme: Theme }) => ({
@@ -46,6 +49,15 @@ const DetailGrid = styled('div')(() => ({
   height: '100%',
   gridArea: 'j',
   overflowX: 'auto',
+  padding: '2px 2px 2px 0px'
+}));
+
+const LicenseGrid = styled(CenteredHorizontalFlexGrid)(({theme}) => ({
+  height: '100%',
+  backgroundColor: theme.palette.secondary.dark,
+  color: theme.palette.secondary.contrastText,
+  display: 'flex',
+  gridArea: 'l',
   padding: '2px 2px 2px 0px'
 }));
 
@@ -87,6 +99,9 @@ export function SalesEntryContainer() {
         <DetailGrid id={'sales-detail-grid-section'}>
           <SalesEntryDetailGrid vm={vm} />
         </DetailGrid>
+        <LicenseGrid>
+          <Link href='https://js.devexpress.com/Licensing/' target='_blank' color='inherit'>{'DevExpress DevExtreme License'}</Link>
+        </LicenseGrid>
       </RootGrid>
     </Grow>
   );

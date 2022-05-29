@@ -11,7 +11,7 @@
     "clean-js": "rimraf ./src/js",
     "tsc": "tsc",
     "transpile": "npm-run-all install-packages clean-js tsc",
-    "mocha": "mocha --reporter spec ./src/js/test/**/*.spec.js",
+    "mocha": "mocha --exit --reporter spec ./src/js/test/**/*.spec.js",
     "test": "npm-run-all transpile mocha",
     "postinstall": "npm-run-all test"
   },

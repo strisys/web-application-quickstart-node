@@ -4,6 +4,7 @@ import { KV, getLogger, SalesEntryQueryService } from 'model-server';
 
 const logger = getLogger('sales-entry-controller')
 const service = new SalesEntryQueryService();
+
 export class Controller {
   public async get(req: Request, res: Response): Promise<void> {
     res.status(httpStatus.OK);

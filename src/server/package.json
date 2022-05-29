@@ -11,11 +11,13 @@
     "tsc": "tsc",
     "transpile": "npm-run-all install-packages clean-js tsc",
     "run-browser": "start http://localhost:3000/api/v1.0/query/sales",
-    "run-server": "start node ./src/js/index.js",
-    "mocha": "mocha --reporter spec ./src/js/test/**/*.spec.js",
+    "run-server-dev": "start node ./src/js/index.js",
+    "run-server": "node ./src/js/index.js",
+    "mocha": "mocha --exit --reporter spec ./src/js/test/**/*.spec.js",
     "postinstall": "npm-run-all test",
     "test": "npm-run-all transpile mocha",
-    "start": "npm-run-all --parallel transpile run-browser --sequential run-server"
+    "start": "npm-run-all transpile run-server-dev",
+    "start-all": "npm-run-all --parallel transpile run-browser --sequential run-server"
   },
   "author": "Stephen Trudel",
   "license": "ISC",

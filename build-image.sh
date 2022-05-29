@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # model core
-cd ./src/model/core
+cd ./model/core
 npm install
 
 # model server
@@ -19,6 +19,3 @@ npm install
 # ui browser-react
 cd ../ui/browser-react
 npm install
-npm start
-
-cd ../../../

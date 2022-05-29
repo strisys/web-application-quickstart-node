@@ -14,6 +14,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { NavLink, useNavigate } from "react-router-dom";
 import { menuList, MenuItem } from './RouteList';
+import { AppBrand } from './AppBrand';
 
 type EventType = ('menuItemSelected' | 'drawerOpen' | 'drawerClose' | 'fullScreen');
 
@@ -47,7 +48,9 @@ function NavigationAppBar(props: { title: string, onEvent: (e: any, name: EventT
       <AppBar position='static'>
         <Toolbar>
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-            <NavLink style={{ color:'inherit', textDecoration: 'inherit' }} to={`/`}>{props.title}</NavLink>
+            <NavLink style={{ color:'inherit', textDecoration: 'inherit' }} to={`/`}>
+              <AppBrand title={props.title} />
+            </NavLink>
           </Typography>
           <IconButton onClick={(e) => props.onEvent(e, 'drawerOpen')}  size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
             <MenuTwoToneIcon />

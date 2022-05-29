@@ -7,7 +7,7 @@ const logger = getLogger(module);
 describe('TaskRepository', () => {
   describe('get', function() {
     it('should return more than 0 entities', async () => {
-      // Assemble/Arrange
+      // Assemble/Act
       const entities: Task[] = await (new TaskRepository()).get();
       
       // Assert
