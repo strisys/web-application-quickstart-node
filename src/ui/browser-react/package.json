@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "npm-run-all list-packages",
+    "list-packages": "npm list --depth 1",
     "install-packages": "npm install file:../../model/client --force",
     "publish-public": "copyfiles -u 1 -a ./build/**/* ./build/js/*.* ./build/css/*.* ./build/img/*.* ./build/media/*.* ../../server/public",
     "publish-build": "copyfiles -u 4 -a ./src/ts/views/static/css/**/* ./src/ts/views/static/img/**/* ./build",

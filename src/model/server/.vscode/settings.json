@@ -3,5 +3,8 @@
     "**/src/js": true,
     ".editorconfig": true,
     ".eslintrc.js": true,
+    ".npmrc": true,
+    "**/.env": true,
+    "scripts": true,
   }
 }

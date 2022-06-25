@@ -1,3 +1,5 @@
-export { SalesEntryQueryService } from './query/sales/query-service';
 export * from 'model-core';
-export { TaskRepository } from './task';
+export * from './secret-store';
+
+export * from './query/sales/query-service';
+export * from './biz/task';

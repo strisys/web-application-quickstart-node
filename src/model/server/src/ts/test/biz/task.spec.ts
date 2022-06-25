@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Task, TaskRepository } from '../task';
-import { getLogger } from './util';
+import { Task, TaskRepository } from '../../biz/task';
+import { getLogger } from '../util';
 
 const logger = getLogger(module);
 

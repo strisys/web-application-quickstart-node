@@ -6,7 +6,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { getLogger } from 'model-server';
-import { staticfile, publicPath, configureHealth, reroute, set as setApiRoutes, handleError } from './';
+import { staticfile, publicPath, configureHealth, reroute, setApiRoutes, handleError, configureOidc } from './';
 
 const namespace = 'pipeline-service';
 const logger = getLogger(namespace);
@@ -37,7 +37,7 @@ export class PipelineService {
     return Boolean(this._server);
   }
 
-  protected configureMiddleware(): PipelineService {
+  protected async configureMiddleware(): Promise<PipelineService> {
     const app = this.app;
 
     logger(`configuring pipeline ...`);
@@ -49,6 +49,7 @@ export class PipelineService {
     app.use(cookieParser());
     app.use(session({ resave: true, saveUninitialized: true,  secret: SESSION_SECRET }));
     configureHealth(app);
+    // await configureOidc(app);
     setApiRoutes(app);
     app.use(staticfile);
     app.all('*', reroute(publicPath));
@@ -65,10 +66,10 @@ export class PipelineService {
       throw new Error(`The pipeline service has already been started.`);
     }
 
-    const app = this.configureMiddleware().app;
+    const app = (await this.configureMiddleware()).app;
     logger(`HTTP pipeline configured`);
 
-    this._server = http.createServer(app).listen(this.port, () => {
+    this._server = http.createServer(app).listen(this.port, `0.0.0.0`, () => {
       logger(`HTTP server listening @ :${this.port}`);
     });
 
