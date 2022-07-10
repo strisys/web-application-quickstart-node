@@ -91,15 +91,18 @@ export const configure = async (app: Application): Promise<Application> => {
     const APP_ID = config[AppConfigKey.AzureAdClientId];
     const APP_SECRET = config[AppConfigKey.AzureAdSecret];
        
+    const redirectUrl = ((PORT === '80') ? `${HOST_URL}/signin` : `${HOST_URL}:${PORT}/signin`);
+    const destroySessionUrl = ((PORT === '80') ? `${HOST_URL}` : `${HOST_URL}:${PORT}`);
+
     return {  
       creds: {
         identityMetadata: `https://login.microsoftonline.com/${TENANT}/v2.0/.well-known/openid-configuration`,
         clientID: APP_ID,
+        redirectUrl: redirectUrl,
         clientSecret: APP_SECRET,
-        redirectUrl: `${HOST_PORT}/signin`,
       },
       resourceURL: 'https://graph.windows.net',
-      destroySessionUrl: `https://login.microsoftonline.com/common/oauth2/logout?post_logout_redirect_uri=${HOST_PORT}`
+      destroySessionUrl: destroySessionUrl
     };
   };
 

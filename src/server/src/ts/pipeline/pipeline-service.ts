@@ -6,7 +6,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { getLogger } from 'model-server';
-import { staticfile, publicPath, configureHealth, reroute, setApiRoutes, handleError, configureOidc } from './';
+import { staticfile, publicPath, configureHealth, reroute, setApiRoutes, handleError, configureOidc, configureDebug } from './';
 
 const namespace = 'pipeline-service';
 const logger = getLogger(namespace);
@@ -43,6 +43,7 @@ export class PipelineService {
     logger(`configuring pipeline ...`);
 
     app.use(morgan(morganFormat));
+    configureDebug(app);
     app.use(bodyParser.text({ limit: '99mb' }));
     app.use(bodyParser.json({ limit: '99mb' }));
     app.use(bodyParser.urlencoded({ extended: false }));

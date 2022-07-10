@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-describe('Template', () => {
+xdescribe('Template', () => {
   describe('sample test', function() {
     it('should pass', async () => {
       // Assemble/Arrange
