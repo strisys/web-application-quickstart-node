@@ -41,8 +41,8 @@ On Windows:
 
 ```bash
 > git clone https://github.com/strisys/web-application-quickstart-node.git
-> cd web-application-quickstart-node
-> powershell ./scripts/build-run-local.ps1
+> cd web-application-quickstart-node/scripts
+> powershell ./build-run-local.ps1
 ```
 
 See the [docs](./docs/azure) for running on containers in combination with Azure.
