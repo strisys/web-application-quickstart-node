@@ -8,7 +8,7 @@ KVStore.current('model-server').isTesting = true;
 const timeout = 15000;
 
 xdescribe('SecretStore', () => {
-  const store = SecretStoreFactory.get('azure-key-vault', 'kv-waqs-dev');
+  const store = SecretStoreFactory.get('azure-key-vault', 'kv-springlake-dev');
 
   describe('get', function () {
     this.timeout(timeout);

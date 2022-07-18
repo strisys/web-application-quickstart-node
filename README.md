@@ -1,50 +1,38 @@
-# Full Stack Web Application Quickstart using DDD (Node version)
+# Gimmelwald Web App
 
 ---
 
-### Overview
+## Development
 
-This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/)), that can be used to start a new project or simply to anchor a discussion.  
+### Tooling
 
-#### DDD
+- Node v16.13.1
+- Docker Desktop
+- PowerShell v5.1
 
-At a high-level, the major components of this architecture are simply as follows.
+### Build & Run
 
-- [**model**](./src/model)
-	- [**core**](./src/model/core/src)
-	- [**server**](./src/model/server/src)
-	- [**client**](./src/model/client/src)
-- [**server**](./src/server/src)
-- [**ui**](./src/ui/src)
+On Windows, to install packages, transpile, test, and run right-click PowerShell file [`build-run-local.ps1`](../scripts/build-run-local.ps1) in the scripts folder and select `Run with PowerShell` from the context menu.  
 
-This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) by virtue of the model set of projects that can be found in the [model module](./src/model).  
+```bash
+> powershell ./docker-run-local.ps1
+```
 
-- [**core**](./src/model/core/src) - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, reports, etc. In practice, this module is often further decomposed between entity and query (reporting) concerns.  The concepts of interest that connect the business meaning and purpose to the source code is encapsulated here.
-- [**server**](./src/model/server/src) - Depends on model.core and is a dependency of the [API server](./src/server).  This module hydrates model core entities from data sources such as document and/or relational databases.  Its general usage is a server context and thus the name "server".  Data access to relational and document data stores belong here.
-- [**client**](./src/model/client/src) - Depends on model.core and is a dependency of [UI](./src/ui). This module hydrates model core entities from data sources such as REST APIs and/or web sockets.  Its general usage is to run in a client context such as a browser thus the name "client".
+For development work in any one package see the *relative* `package.json` to determine the npm commands that are available.
 
-Some benefits, among many, of this approach are as follows:
+### Container Support
 
-1. **Reuse** - Code is shared between [ui](./src/ui) and [server](./src/server) via the model core.  A calculation, for example, can be done on either the client or server assuming both have the same [model.core code](./src/model/core/src) and data without the need for either to talk to each other.
-2. **Testability** - The first calling client to logic isolated to the model set of projects is a test suite like [Mocha](https://mochajs.org/).  There should be no need to run the application to assert on the correctness of the modules or to have to account for a framework in the way when testing.  
+#### Build & Publish - Azure Container Registry & Docker
 
-In the event there is *no server*, the application is a *pure client application* that will run in a browser much like a single page web application (SPA).  Though not recommended, this architecture can be changed to the following to simplify things to one root module.
+Though mostly decoupled, this application targets the Microsoft Azure platform for deployment and, as such, uses an [Azure Container registry](https://docs.microsoft.com/en-us/azure/container-registry/) to publish images.  To publish images, run the PowerShell script named [`docker-build-publish-azure.ps1`](../scripts/docker-build-publish-azure.ps1) in the scripts folder.  Its generally best to run this script in PowerShell IDE one line at a time as sometimes the login into the container registry fails and must be tried multiple times.  It should be noted that this script makes use of two Docker files - `Dockerfile-App` and `Dockerfile-AppDev`.  The former is defines the instructions to create the image meant to be used for deployment and, thus, will be published to an Azure container registry.  `Dockerfile-AppDev`, on the other hand, uses the deployment image as a base image, adds Azure CLI tools for local development use only, and is built and published locally.  See the next section to see why the Azure CLI is necessary on the development image.
 
-- ui
-	- model
-		- core
-		- client
-	- views
+#### Run with Docker
 
-Notice that `server` goes as does `model.server`.  The remainder of `model` will be embedded in `ui` yet still separated from `views`.  Its possible for browser-specific concerns to leak into the model so this is something that should be considered.
+Because secrets only will be stored in Azure Key Vault, the application will need to know the identity of the current user when doing local development.  The way in which this will be done is by using the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) and logging in.  To make this workflow easier the developer can run the PowerShell script under named [`docker-run-local.ps1`](../scripts/docker-run-local.ps1) in the script folder.  This will allow the developer to log into Azure AD using the Azure CLI discussed in the previous section. 
 
-### To Install & Run
+```bash
+> powershell ./docker-run-local.ps1
+```
 
-On Windows:
+For this to work its assumed the developer will be given the rights directly or indirectly under the the Azure Key Vault policy to read from the key vault that is dedicated to development.
 
-	> git clone https://github.com/strisys/web-application-quickstart-node.git
-	> cd web-application-quickstart-node
-	> powershell build.ps1
-
-- This was tested using [Node `v16.13.1`](https://nodejs.org/download/release/v16.13.2/).  
-- The build script uses PowerShell and the [execution policy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2#managing-the-execution-policy-with-powershell) should be [set](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2) to `RemoteSigned` for the current user scope.

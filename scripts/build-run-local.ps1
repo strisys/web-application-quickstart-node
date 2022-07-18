@@ -1,5 +1,7 @@
+az login
+
 # model core
-cd .\src\model\core
+cd ..\src\model\core
 npm install
 
 # model server

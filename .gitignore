@@ -1,5 +1,6 @@
 # Application output
 js/
+*.cid
 
 # Logs
 logs

@@ -1,0 +1,23 @@
+FROM acrwebapplicationquickstart.azurecr.io/strisys/web-application-quickstart:v0
+LABEL name="web-application-quickstart"
+LABEL maintaner="webapplicationquickstart@strisys.com"
+
+# update apk
+RUN echo 'adding OS packages' >> /build-log.txt
+RUN apk update
+RUN apk upgrade
+
+# install python 3
+RUN echo 'installing python 3  ...' >> /build-log.txt
+ENV PYTHONUNBUFFERED=1
+RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+
+# install azure cli and dependencies
+RUN echo 'install azure cli and dependencies (gcc musl-dev python3-dev libffi-dev openssl-dev cargo make) ...' >> /build-log.txt
+RUN apk add gcc musl-dev python3-dev libffi-dev openssl-dev cargo make
+RUN pip install azure-cli
+
+WORKDIR /app/server
+CMD ["npm", "start"]

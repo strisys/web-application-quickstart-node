@@ -6,10 +6,15 @@ import { getLogger } from 'model-core';
 import path from 'path';
 
 const logger = getLogger('secret-store');
+const KV_KEY = 'AZURE_KEY_VAULT_NAME';
 
 const tryLoadEnvironmentVariablesFromEnvFile = (filePath: string = null): boolean => {
   // Attempt to get the configuration parameters from a .env file if working locally.
   let fullPath = (filePath || module.path);
+
+  if (!fullPath) {
+    return false;
+  }
 
   if (!fullPath.includes('.env')) {
     fullPath = path.join(fullPath, '.env');
@@ -57,25 +62,29 @@ class SecretStore implements ISecretStore {
     this._vaultName = (vaultName || null);
   }
 
+  private toVaultUrl(vaultName: string) {
+    return `https://${vaultName}.vault.azure.net`;
+  }
+
   private tryGetKeyVaultUrl(): string {
     if (this._vaultName) {
-      return `https://${this._vaultName}.vault.azure.net`;
+      return this.toVaultUrl(this._vaultName);
     }
 
     // The environment variable for AZURE-KEY-VAULT-NAME may be passed in
     // via or set in the .env file.  If its already set do not bother with env.
-    this._vaultName = process.env['AZURE-KEY-VAULT-NAME'];
+    this._vaultName = process.env[KV_KEY];
 
     if (!this._vaultName) {
       tryLoadEnvironmentVariablesFromEnvFile();
-      this._vaultName = process.env['AZURE-KEY-VAULT-NAME'];
+      this._vaultName = process.env[KV_KEY];
     }
 
     if ((!this._vaultName) || (this._vaultName === 'not-set')) {
-      throw new Error(`Failed to create Azure Key Vault client.  The 'AZURE_KEY_VAULT_NAME' environment variable was not set.`);
+      throw new Error(`Failed to create Azure Key Vault client.  The ${KV_KEY} environment variable was not set.`);
     }
 
-    return `https://${this._vaultName}.vault.azure.net`;
+    return this.toVaultUrl(this._vaultName);
   }
 
   private tryGetClient(): SecretClient {
@@ -97,7 +106,7 @@ class SecretStore implements ISecretStore {
   } 
 
   private getCachedValue(name: string): string {
-    return SecretStore._cache[name];
+    return (process.env[name] || SecretStore._cache[name]);
   }
 
   private async getStoredValue(name: string): Promise<string> {
