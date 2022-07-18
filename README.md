@@ -1,38 +1,48 @@
-# Gimmelwald Web App
+# Full Stack Web Application Quickstart using DDD (Node version)
 
 ---
 
-## Development
+### Overview
+
+This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/)), that can be used to start a new project or simply to anchor a discussion.  
+
+#### DDD
+
+At a high-level, the major components of this architecture are simply as follows.
+
+- [**model**](./src/model)
+	- [**core**](./src/model/core/src)
+	- [**server**](./src/model/server/src)
+	- [**client**](./src/model/client/src)
+- [**server**](./src/server/src)
+- [**ui**](./src/ui/src)
+
+This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven_design) by virtue of the model set of projects that can be found in the [model module](./src/model).  
+
+- [**core**](./src/model/core/src) - Core business logic of an application containing entities, relationships, object graph navigation, serializable structures (state), business rules, calculations, reports, etc. In practice, this module is often further decomposed between entity and query (reporting) concerns.  The concepts of interest that connect the business meaning and purpose to the source code is encapsulated here.  All other modules in the application can depend on this one.
+- [**server**](./src/model/server/src) - Depends on model/core and is the main dependency of the [API server](./src/server) though its clients could be other things that run on a server.  One of the main functions of this module is its data access layer which hydrates states defined model/core from various data sources (e.g. document and/or relational databases, REST APIs, etc).  Its general usage is a server context and thus the name "server".  
+- [**client**](./src/model/client/src) - Depends on model/core and is a dependency of [UI](./src/ui). This module hydrates model core entities from data sources such as REST APIs and/or web sockets exposed by the [API server](./src/server).  Its general usage is to run in a client context such as a browser thus the name "client".
+
+Some benefits, among many, of this approach are as follows:
+
+1. **Reuse** - Code is shared between [ui](./src/ui) and [server](./src/server) via the model core.  A calculation, for example, can be done on either the client or server assuming both have the same [model/core code](./src/model/core/src) and data without the need for either to talk to each other.
+2. **Testability** - The first calling client to logic isolated to the model set of projects is a test suite like [Mocha](https://mochajs.org/).  There should be no need to run the application to assert on the correctness of the modules or to have to account for a framework in the way when testing.  
+
+Notice simply that [**server**](./src/server/src) and [**model/server**](./src/model/server/src) have been removed.  
 
 ### Tooling
 
-- Node v16.13.1
-- Docker Desktop
-- PowerShell v5.1
+- [Node v16.13.1](https://nodejs.org/download/release/v16.13.2)
+- PowerShell v5.1 - The [execution policy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2#managing-the-execution-policy-with-powershell) should be [set](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2) to **RemoteSigned** for the current user scope
 
-### Build & Run
+### To Install & Run
 
-On Windows, to install packages, transpile, test, and run right-click PowerShell file [`build-run-local.ps1`](../scripts/build-run-local.ps1) in the scripts folder and select `Run with PowerShell` from the context menu.  
-
-```bash
-> powershell ./docker-run-local.ps1
-```
-
-For development work in any one package see the *relative* `package.json` to determine the npm commands that are available.
-
-### Container Support
-
-#### Build & Publish - Azure Container Registry & Docker
-
-Though mostly decoupled, this application targets the Microsoft Azure platform for deployment and, as such, uses an [Azure Container registry](https://docs.microsoft.com/en-us/azure/container-registry/) to publish images.  To publish images, run the PowerShell script named [`docker-build-publish-azure.ps1`](../scripts/docker-build-publish-azure.ps1) in the scripts folder.  Its generally best to run this script in PowerShell IDE one line at a time as sometimes the login into the container registry fails and must be tried multiple times.  It should be noted that this script makes use of two Docker files - `Dockerfile-App` and `Dockerfile-AppDev`.  The former is defines the instructions to create the image meant to be used for deployment and, thus, will be published to an Azure container registry.  `Dockerfile-AppDev`, on the other hand, uses the deployment image as a base image, adds Azure CLI tools for local development use only, and is built and published locally.  See the next section to see why the Azure CLI is necessary on the development image.
-
-#### Run with Docker
-
-Because secrets only will be stored in Azure Key Vault, the application will need to know the identity of the current user when doing local development.  The way in which this will be done is by using the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli) and logging in.  To make this workflow easier the developer can run the PowerShell script under named [`docker-run-local.ps1`](../scripts/docker-run-local.ps1) in the script folder.  This will allow the developer to log into Azure AD using the Azure CLI discussed in the previous section. 
+On Windows:
 
 ```bash
-> powershell ./docker-run-local.ps1
+> git clone https://github.com/strisys/web-application-quickstart-node.git
+> cd web-application-quickstart-node
+> powershell ./scripts/build-run-local.ps1
 ```
 
-For this to work its assumed the developer will be given the rights directly or indirectly under the the Azure Key Vault policy to read from the key vault that is dedicated to development.
-
+See the [docs](./docs/azure) for running on containers in combination with Azure.
