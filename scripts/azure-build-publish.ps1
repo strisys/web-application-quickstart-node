@@ -21,6 +21,8 @@ $env:CONTAINER_FILTER = 'label=name=' + $env:CONTAINER_NAME
 az acr build --registry $env:REGISTRY_NAME --image $env:IMAGE_NAME --file ../Dockerfile-App ../ --platform linux 
 az acr import -n $env:REGISTRY_NAME --source $env:IMAGE_NAME_FULL -t $env:IMAGE_NAME_LATEST --force
 az webapp restart --name $env:APP_CODE_NAME --resource-group $env:RESOURCE_GROUP_NAME --slot 'development'
+
+git tag $env:VERSION
 start $env:WEB_APP_URL_DEV
 
 <# 
