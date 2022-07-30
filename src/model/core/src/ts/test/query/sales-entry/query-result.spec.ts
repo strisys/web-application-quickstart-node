@@ -18,7 +18,7 @@ const data: sut.ISalesEntryState[] = [{
 }];
 
 describe('SalesEntryQueryResult', () => {
-  describe('constructur', function() {
+  describe('constructor', function() {
     it('should contain the expected state', async () => {
       // Assemble/Arrange
       const state: sut.ISalesEntryQueryResultState = { id: '1', data: data };

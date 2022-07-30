@@ -59,11 +59,7 @@ export class Task {
   }
 
   public static from(states: ITaskState[]): Task[] {
-    if (!states) {
-      return [];
-    }
-
-    return states.map((s) => {
+    return (states || []).filter((s) => Boolean(s)).map((s) => {
       return (new Task(s));
     })
   }

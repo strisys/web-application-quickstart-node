@@ -3,6 +3,7 @@
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const path = require('path');
+const os = require('os');
 
 // Plug-ins
 const TerserPlugin = require('terser-webpack-plugin');
@@ -10,6 +11,9 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const WebpackBar = require('webpackbar');
+
+// App Info
+const appTile = "Web App QuickStart";
 
 // Version
 const packagejson = require('./package.json');
@@ -23,6 +27,10 @@ const getPath = (paths, folder, fileOrPath) => {
 const tryParseBoolean = (argv, name) => {
   const val = argv.env[name];
   return Boolean(val && JSON.parse(val));
+};
+
+const isWindows = () => {
+  return os.platform() === 'win32';
 };
 
 const getPaths = (argv) => {
@@ -49,7 +57,7 @@ const getConfig = (isProd) => {
     name: 'development',
     mode: 'development',
     target: ['browserslist'],
-    bail: true,
+    bail: false,
     entry: {
       main: paths.entryPoint
     },
@@ -98,7 +106,6 @@ const getConfig = (isProd) => {
       }
     },
     plugins: [
-      new WebpackBar(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         APP_VERSION: version,
@@ -111,7 +118,7 @@ const getConfig = (isProd) => {
       new HtmlWebpackPlugin({
         filename: path.resolve(paths.build, 'index.html'),
         template: path.resolve(paths.public, 'index-template.html'),
-        title: 'MyWebApp v.' + packagejson.version,
+        title: (appTile + ' v.' + packagejson.version),
         publicPath: './js/',
         hash: true
       }),
@@ -167,6 +174,14 @@ const getConfig = (isProd) => {
 
 module.exports = (_, argv) => {
   const config = getConfig(argv);
+
+  if (isWindows()) {
+    config.plugins.push(new WebpackBar());
+  }
+
+  if (tryParseBoolean(argv, 'analyze')) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
 
   if (tryParseBoolean(argv, 'analyze')) {
     config.plugins.push(new BundleAnalyzerPlugin());

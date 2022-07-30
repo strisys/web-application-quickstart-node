@@ -7,13 +7,13 @@ import { Application, Request, Response } from 'express';
 import { SecretStoreFactory, getLogger } from 'model-server';
 
 enum AppConfigKey {
-  NodeEnv = 'NODE-ENV',
+  NodeEnv = 'NODE_ENV',
   AzureAdTenant = 'AZURE-AD-TENANT',
   AzureAdClientId = 'AZURE-AD-APP-ID',
   AzureAdSecret = 'AZURE-AD-APP-SECRET',
-  HostUrl = 'AZURE-AD-OAUTH-HOST-URL',
-  HostPort  = 'AZURE-AD-OAUTH-HOST-PORT',
-  FrontEndUrl = 'AZURE-AD-OAUTH-URL-FRONTEND',
+  HostUrl = 'AZURE_AD_OAUTH_HOST_URL',
+  HostPort  = 'AZURE_AD_OAUTH_HOST_PORT',
+  FrontEndUrl = 'AZURE_AD_OAUTH_URL_FRONTEND',
   SessionSecret = 'SESSION-SECRET',
 }
 
@@ -112,7 +112,8 @@ export const configure = async (app: Application): Promise<Application> => {
   const cfg: IOIDCStrategyOptionWithRequest = {
     identityMetadata: passconfig.creds.identityMetadata,
     clientID: passconfig.creds.clientID,
-    responseType: 'code id_token',
+    // responseType: 'code id_token',
+    responseType: 'id_token',
     responseMode: 'form_post',
     redirectUrl: passconfig.creds.redirectUrl,
     allowHttpForRedirectUrl: true,

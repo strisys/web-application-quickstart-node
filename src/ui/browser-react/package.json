@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "npm-run-all list-packages",
+    "postinstall": "npm-run-all bundle list-packages",
     "list-packages": "npm list --depth 1",
     "install-packages": "npm install file:../../model/client --force",
-    "publish-public": "copyfiles -u 1 -a ./build/**/* ./build/js/*.* ./build/css/*.* ./build/img/*.* ./build/media/*.* ../../server/public",
-    "publish-build": "copyfiles -u 4 -a ./src/ts/views/static/css/**/* ./src/ts/views/static/img/**/* ./build",
+    "publish-public": "copyfiles --verbose --error -u 1 -a \"./build/**/*\" \"./build/js/*.*\" \"./build/css/*.*\" \"./build/img/*.*\" \"./build/media/*.*\" \"../../server/public\"",
+    "publish-build": "copyfiles --verbose --error -u 4 -a \"./src/ts/views/static/css/**/*\" \"./src/ts/views/static/img/**/*\" \"./build\"",
     "publish": "npm-run-all publish-build publish-public",
     "clean-public": "rimraf ../../server/public",
     "clean-build": "rimraf ./build",
@@ -15,14 +15,16 @@
     "tsc": "tsc",
     "transpile": "npm-run-all clean-src-js install-packages tsc",
     "webpack": "webpack-cli --mode=production --env analyze=false",
-    "webpack-watch": "webpack-cli --mode=development --env analyze=false --watch",
+    "webpack-watch": "webpack-cli --mode=development --env analyze=false  --watch",
     "bundle-pre": "npm-run-all --parallel clean-build clean-public --sequential transpile",
     "bundle": "npm-run-all bundle-pre webpack publish",
     "bundle-watch": "npm-run-all webpack-watch publish",
     "run-server": "concurrently \"cd ../../server && npm run run-server && cd ../../..\"",
-    "run-browser": "start http://localhost:3000",
+    "run-browser": "echo running on http://localhost:3000",
+    "run-browser-w": "start http://localhost:3000",
     "start": "npm-run-all bundle --parallel run-server run-browser",
-    "start-dev": "npm-run-all --parallel bundle-watch run-server run-browser"
+    "start-dev": "npm-run-all --parallel bundle-watch run-server run-browser",
+    "start-dev-w": "npm-run-all --parallel bundle-watch run-server run-browser-w"
   },
   "eslintConfig": {
     "extends": [

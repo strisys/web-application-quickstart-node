@@ -7,3 +7,4 @@ export { configure as configureHealth } from './health';
 export { set as setApiRoutes } from './router-map-service';
 export { handleError } from './unhandled-error';
 export { configure as configureDebug } from './debug';
+export { configure as configureIdentity } from './identity';

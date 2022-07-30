@@ -2,7 +2,7 @@ import { Task, ITaskState } from 'model-core';
 export { Task, ITaskState };
 
 // NOTE: This is data that would come from a document or relational database
-const data: ITaskState[] = [{
+let cache: ITaskState[] = [{
   id: '1',
   description: 'Refactor this app'
 }, {
@@ -24,14 +24,28 @@ const data: ITaskState[] = [{
 
 export class TaskRepository {
   public async get(): Promise<Task[]> {
-    return Task.from(data);
+    return Task.from(cache);
   }
 
   public async getOne(id: string): Promise<Task> {
-    const state = data.find((c) => {
+    const state = cache.find((c) => {
       return (c.id === id);
     });
 
     return ((state) ? (new Task(state)) : Task.null());
+  }
+
+  public async delete(ids: (Task | Task[])): Promise<Task[]> {
+    if (!ids) {
+      return [];
+    }
+
+    const deleted = (Array.isArray(ids) ? ids : [ids]);
+
+    const remove = (task: ITaskState): boolean => {
+      return (!Boolean(deleted.find((d) => (d.id === task.id))));
+    }
+
+    return Task.from(cache = cache.filter(remove));
   }
 }

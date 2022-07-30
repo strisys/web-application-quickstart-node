@@ -6,7 +6,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { getLogger } from 'model-server';
-import { staticfile, publicPath, configureHealth, reroute, setApiRoutes, handleError, configureOidc, configureDebug } from './';
+import { staticfile, publicPath, configureHealth, reroute, setApiRoutes, handleError, configureOidc, configureDebug, configureIdentity } from './';
 
 const namespace = 'pipeline-service';
 const logger = getLogger(namespace);
@@ -48,9 +48,10 @@ export class PipelineService {
     app.use(bodyParser.json({ limit: '99mb' }));
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(cookieParser());
-    app.use(session({ resave: true, saveUninitialized: true,  secret: SESSION_SECRET }));
+    app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
     configureHealth(app);
     // await configureOidc(app);
+    configureIdentity('azure-ad', app);
     setApiRoutes(app);
     app.use(staticfile);
     app.all('*', reroute(publicPath));

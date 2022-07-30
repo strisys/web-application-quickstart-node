@@ -1,4 +1,4 @@
-FROM acrwebapplicationquickstart.azurecr.io/strisys/web-application-quickstart:v0
+FROM acrwebapplicationquickstart.azurecr.io/strisys/web-application-quickstart
 LABEL name="web-application-quickstart"
 LABEL maintaner="webapplicationquickstart@strisys.com"
 

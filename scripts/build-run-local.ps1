@@ -1,4 +1,4 @@
-az login
+# az login
 
 # model core
 cd ..\src\model\core
@@ -19,7 +19,7 @@ npm install
 # ui browser-react
 cd ..\ui\browser-react
 npm install
-npm start
+npm run start-dev-w
 
 cd ..\..\..\
 pause

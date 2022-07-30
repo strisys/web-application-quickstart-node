@@ -15,7 +15,7 @@ export const DefaultHeaderParams: HeaderParams = {
   'Content-Type': 'application/json'
 };
 
-export type HttpMethod = ('GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD');
+export type HttpMethod = ('GET' | 'POST' | 'PUT' | 'PATCH' | 'HEAD' | 'DELETE');
 
 export const tryToQueryParamString = (queryParams: QueryParams): string => {
   return ((queryParams) ? (new URLSearchParams(queryParams)).toString() : '');
@@ -68,6 +68,10 @@ export abstract class RequestParams {
     return (this.method === 'PATCH');
   }
 
+  public get isBodyApplicable(): boolean {
+    return (this.isPost || this.isPatch || this.isPut);
+  }
+
   public get isHead(): boolean {
     return (this.method === 'HEAD');
   }
@@ -104,8 +108,36 @@ export abstract class RequestParams {
     return Boolean(this._throwOnError);
   }
 
+  public static createModParams(method: ('POST' | 'PUT' | 'PATCH' | 'DELETE'), url: string, bodyParams: any = null): RequestParams {
+    if (method === 'POST') {
+      return (new PostRequestParams(url, bodyParams));
+    }
+
+    if (method === 'PUT') {
+      return (new PutRequestParams(url, bodyParams));
+    }
+
+    if (method === 'PATCH') {
+      return (new PatchRequestParams(url, bodyParams));
+    }
+
+    if (method === 'DELETE') {
+      return (new DeleteRequestParams(url, bodyParams));
+    }
+
+    throw new Error(`Failed to create 'RequestParams' given the method (${method}) provided.`);
+  }
+
+  public static createQueryParams(method: ('GET'), url: string, queryStringParams: QueryParams = null): RequestParams {
+    if (method === 'GET') {
+      return (new GetRequestParams(url, queryStringParams));
+    }
+
+    throw new Error(`Failed to create 'RequestParams' given the method (${method}) provided.`);
+  }
+
   public toString(): string {
-    return `method:=${this.method}, url:=${this.url}`;
+    return `method:=${this.method}, url:=${this.url}, body:=${this.bodyString}`;
   }
 }
 
@@ -147,6 +179,12 @@ export class PatchRequestParams extends RequestParams {
   }
 }
 
+export class DeleteRequestParams extends RequestParams {
+  constructor(url: string, bodyParams: any = null, headerParams: HeaderParams = DefaultHeaderParams, throwError = true) {
+    super('DELETE', url, bodyParams, null, headerParams, throwError)
+  }
+}
+
 export class ExecResponse {
   constructor(public params: PostRequestParams, public value: Response, public error: any = null) {
   }
@@ -163,14 +201,16 @@ export const exec = async (params: RequestParams): Promise<ExecResponse> => {
   };
 
   try {
-    if ((params.isPost) && (params.hasBody)) {
-      requestInit.body = (params as PostRequestParams).bodyString;
+    if ((params.isBodyApplicable) && (params.hasBody)) {
+      const bodyString = (params as PostRequestParams).bodyString;
+      logger(`setting body of request [${bodyString}] ...`);
+      requestInit.body = bodyString;
     }
 
     logger(`submitting request [${params.toString()}] ...`);
 
     const response: Response = (await fetch(params.url, requestInit));
-        
+
     if ((!response.ok) && (params.throwOnError)) {
       const message = `Request failed (${params.toString()}).  A non-success error code (${response.status}) was returned!`;
       logger(message);
@@ -185,7 +225,7 @@ export const exec = async (params: RequestParams): Promise<ExecResponse> => {
     if (!params.throwOnError) {
       return (new ExecResponse(params, null, ex));
     }
-    
+
     throw ex;
   }
 };
