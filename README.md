@@ -4,7 +4,7 @@
 
 ### Overview
 
-This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Node.js](https://nodejs.org), [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/), [React](https://reactjs.org/)), that can be used to start a new project or simply to anchor a discussion.  The is [supplemental documentation](./docs/azure) on how to deploy this architecture to Azure using offerings such as [Azure Web App for Containers](https://learn.microsoft.com/en-gb/training/modules/deploy-run-container-app-service/) and [Azure AD](https://learn.microsoft.com/en-ca/azure/active-directory/fundamentals/) as an identity provider for authentication . 
+This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Node.js](https://nodejs.org), [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/), [React](https://reactjs.org/)), that can be used to start a new project or simply to anchor a discussion.  There is [supplemental documentation](./docs/azure) on how to deploy this to Azure using offerings such as [Azure Web App for Containers](https://learn.microsoft.com/en-gb/training/modules/deploy-run-container-app-service/), [Azure Container Registry](https://azure.microsoft.com/en-us/products/container-registry/#overview), and [Azure AD](https://learn.microsoft.com/en-ca/azure/active-directory/fundamentals/) as an identity provider for authentication . 
 
 #### DDD
 
