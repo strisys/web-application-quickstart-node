@@ -1,15 +1,12 @@
 import * as mc from 'model-core';
-import { exec, GetRequestParams } from '../../shared/fetch-util';
+import { tryExecGetJson, getApiPath } from '../../shared';
 
-const logger = mc.getLogger('sales-query-service')
-const baseUrl = '/api/v1.0';
+const logger = mc.getLogger('model.client:query:sales:sales-query-service');
 
 export class SalesEntryQueryService {
-  public async get(context: mc.KV = null): Promise<mc.SalesEntryQueryResult> {
-    const url = `${baseUrl}/query/sales`;
-    const response = (await exec(new GetRequestParams(url, context)));
-    const json = (await response.value.json());
-
+  public async get(context: mc.KV = {}): Promise<mc.SalesEntryQueryResult> {
+    logger(`executing client call to get sales results ...`);
+    const json: mc.ISalesEntryQueryResultState = (await tryExecGetJson(getApiPath('query/sales'), context));
     return mc.SalesEntryQueryResult.from(json);
   }
 }

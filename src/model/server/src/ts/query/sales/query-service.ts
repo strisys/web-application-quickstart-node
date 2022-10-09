@@ -1,8 +1,13 @@
-import * as mc from 'model-core';
+import { SalesEntryQueryResult, ISalesEntryState, getLogger, KV, generateUuid } from 'model-core';
 import { getData } from './data'
 
+const logger = getLogger('model.server:query:sales');
+let counter = 0;
+
 export class SalesEntryQueryService {
-  public async get(context: mc.KV = null): Promise<mc.SalesEntryQueryResult> {
+  public async get(context: KV = {}): Promise<SalesEntryQueryResult> {
+    logger(`fetching sales query results (context:=${JSON.stringify(context)}) from persistent store ...`);
+
     const tryFilter = () => {
       const data = getData();
 
@@ -10,7 +15,7 @@ export class SalesEntryQueryService {
         return data;
       }
 
-      let filtered: mc.ISalesEntryState[] = data;
+      let filtered: ISalesEntryState[] = data;
 
       if (context['region']) {
         filtered = filtered.filter((e) => (e.region === context['region']));
@@ -27,9 +32,13 @@ export class SalesEntryQueryService {
       return filtered;
     }
 
-    return (new mc.SalesEntryQueryResult({ 
-      id: '1', 
-      data: tryFilter()
+    const results = tryFilter();
+    logger(`sales query result fetched (context:=${JSON.stringify(context)}, data:=${results.length}) from persistent store`);
+
+    return (new SalesEntryQueryResult({
+      id: (++counter).toFixed(3).toString(),
+      uuid: generateUuid(),
+      data: results
     }));
   }
 }

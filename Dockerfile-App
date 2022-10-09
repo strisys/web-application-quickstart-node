@@ -2,13 +2,30 @@ FROM node:18.2.0 as build-stage
 
 RUN echo 'transferrring context ...' >> /build-log.txt
 WORKDIR /app
-COPY ./npm-install.sh .
 COPY ./src .
 
+# Run build
 RUN echo 'running build script ...' >> /build-log.txt
-RUN bash npm-install.sh
+
+WORKDIR ./model/core
+RUN npm install
+
+WORKDIR ../client
+RUN npm install
+
+WORKDIR ../server
+RUN npm install
+
+WORKDIR ../../server
+RUN npm install
+
+WORKDIR ../ui/browser-react
+RUN npm install
+
+WORKDIR ../../../
 
 RUN echo 'starting final stage ...' >> /build-log.txt
+
 FROM node:18.2.0-alpine as final-stage
 
 LABEL name="web-application-quickstart"

@@ -11,6 +11,7 @@ export const getData = (): mc.ISalesEntryState[] => {
   return (cache = salesData.map((d) => {
     return {
       id: `${d.id}`,
+      uuid: mc.generateUuid(),
       region: d.region,
       country: d.country,
       city: d.city,

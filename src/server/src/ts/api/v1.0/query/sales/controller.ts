@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
 import { KV, getLogger, SalesEntryQueryService } from 'model-server';
 
-const logger = getLogger('sales-entry-controller')
+const logger = getLogger('api:v1.0:sales');
 const service = new SalesEntryQueryService();
 
 export class Controller {

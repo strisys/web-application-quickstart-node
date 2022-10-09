@@ -44,7 +44,7 @@ const getPaths = (argv) => {
   paths.build = path.resolve(paths.base, `${targetBuildPath}`);
   paths.buildjs = path.resolve(paths.base, (paths.build + '/js'));
   paths.src = path.resolve(paths.base, 'src/ts');
-  paths.entryPoint = getPath(paths, 'src', 'Index.tsx');
+  paths.entryPoint = getPath(paths, 'src', 'index.tsx');
   paths.public = (paths.src + '/views/static');
 
   return paths;

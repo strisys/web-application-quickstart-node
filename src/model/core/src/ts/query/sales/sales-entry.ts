@@ -1,6 +1,7 @@
+import { IIdentity, generateUuid } from '../../biz';
 
-export interface ISalesEntryState {
-  id: string;
+export interface ISalesEntryState extends IIdentity {
+  id: string,
   region: string,
   country: string,
   city: string,
@@ -8,66 +9,67 @@ export interface ISalesEntryState {
   date: Date
 }
 
-export class SalesEntry {
-  private static readonly _null = new SalesEntry();
-  private readonly _state: ISalesEntryState = SalesEntry.emptyState;
+type StateOrNull = (ISalesEntryState | null);
+type From<T> = (T extends Array<ISalesEntryState> ? Array<SalesEntry> : SalesEntry);
 
-  constructor(state: ISalesEntryState = null) {
+export class SalesEntry {
+  private static _null: SalesEntry;
+  private static _emptyState: ISalesEntryState;
+  private _state: ISalesEntryState;
+
+  constructor(state: StateOrNull = null) {
     this._state = SalesEntry.coerce(state);
   }
 
-  public get id(): string {
-    return (this._state.id || '');
+  public get uuid(): string {
+    return (this._state.uuid || '');
   }
 
   public get name(): string {
-    return this._state.id;
+    return this._state.uuid;
   }
 
   public toString(): string {
     return this.name;
   }
 
-  public get state(): ISalesEntryState {
+  public get state(): Readonly<ISalesEntryState> {
     return { ...this._state };
   }
 
-  public static null(): SalesEntry {
-    SalesEntry._null._state.id = '';
-    return SalesEntry._null;
+  public static get null(): SalesEntry {
+    return (SalesEntry._null ?? (SalesEntry._null = new SalesEntry(Object.freeze({ ...SalesEntry.emptyState, uuid: 'null' }))));
   }
 
-  public static get emptyState(): ISalesEntryState {
-    return {
+  public static get emptyState(): Readonly<ISalesEntryState> {
+    return (SalesEntry._emptyState || (SalesEntry._emptyState = Object.freeze({
       id: '',
+      uuid: '',
       region: '',
       country: '',
       city: '',
       amount: 0,
-      date: null
-    };
+      date: new Date()
+    })));
   }
 
-  public static coerce(source: ISalesEntryState): ISalesEntryState {
-    const val = (source || SalesEntry.emptyState);
+  public static coerce(source: StateOrNull): ISalesEntryState {
+    const emp = SalesEntry.emptyState;
+    const val = (source || emp);
 
     return {
-      id: (val.id || null),
-      region: (val.region || ''),
-      country: (val.country || ''),
-      city: (val.city || ''),
-      amount: (val.amount || 0),
-      date: (val.date || null),
+      ...val,
+      id: (val.id || emp.id),
+      uuid: (val.uuid || generateUuid()),
+      region: (val.region || emp.region),
+      country: (val.country || emp.country),
+      city: (val.city || emp.city),
+      amount: (val.amount || emp.amount)
     };
   }
 
-  public static from(states: ISalesEntryState[]): SalesEntry[] {
-    if ((!states) || (!states.length)) {
-      return [];
-    }
-
-    return states.map((s) => {
-      return (new SalesEntry(s));
-    })
+  public static from<T extends (Array<ISalesEntryState> | ISalesEntryState)>(states: T): From<T> {
+    const val: (Array<ISalesEntryState> | ISalesEntryState) = (states || []);
+    return ((Array.isArray(val)) ? val.map((s) => (new SalesEntry(s))) : new SalesEntry(val)) as From<T>;
   }
 }

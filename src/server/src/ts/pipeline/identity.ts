@@ -1,59 +1,35 @@
 import { Application, Request, Response, NextFunction } from 'express';
 import { getLogger } from 'model-server';
 import { IIdentityState } from 'model-server';
+import { tryExtractIdentity } from './oidc/azure/identity';
 
-export type IdentityProviderType = ('azure-ad');
+export type IdentityProvider = ('azure-ad');
+export type IdentityHandler = (req: Request) => Promise<IIdentityState>;
+
 const logger = getLogger('identity-middleware');
 
 declare global {
   namespace Express {
     interface Request {
-      identity: IIdentityState;
+      profile: IIdentityState;
+      bearerToken: string
     }
   }
 }
 
-const tryExtractAzure = async (req: Request): Promise<IIdentityState> => {
-  // user set elsewhere in authentication middleware
-  const user: any = req.user;
+export const configure = (app: Application, idp: IdentityProvider): Application => {
+  let handler: IdentityHandler = null;
 
-  if (!user) {
-    return null;
+  if (idp === 'azure-ad') {
+    handler = tryExtractIdentity;
   }
 
-  const email = user._json.email;
-
-  const identity: IIdentityState = {
-    id: user.oid,
-    email: email,
-    displayName: user.displayName,
-    settings: {}
+  if (handler) {
+    app.all('/*', async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      req.profile = (await handler(req));
+      next();
+    });
   }
 
-  logger(`identity of request caller extracted (identity:=${JSON.stringify(identity)}`);
-  return identity;
-}
-
-const extractMap = {
-  "azure-ad": tryExtractAzure
-}
-
-const trySetUser = (type: IdentityProviderType): any => {
-  const extractFn = extractMap[type];
-
-  if (!extractFn){
-    logger(`Failed to determine identity extract function from provided type [${type}]`);
-  }
-
-  const fn = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    req.identity = (await extractFn(req));
-    next();
-  }
-
-  return fn;
-};
-
-export const configure = (type: IdentityProviderType, app: Application): Application => {
-  app.all('/*', trySetUser(type));
   return app;
 };

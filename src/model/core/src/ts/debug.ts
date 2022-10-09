@@ -6,9 +6,9 @@ if (typeof window !== 'undefined') {
   `)
 }
 
-export const getLogger = (namespace: string = null): IDebugger => {
+export const getLogger = (namespace: (string | null) = null): IDebugger => {
   const ns = ((!namespace) ? '*' : (((namespace.endsWith(':*')) ? namespace : `${namespace}:*`)));
-  
+
   // NOTE: debug.js, if running in browser/electron will use console.debug for Chrome.
   // These will not show if being filtered out by Chrome itself.
   // If the log message not shown in Chrome make sure they are not being filtered out.

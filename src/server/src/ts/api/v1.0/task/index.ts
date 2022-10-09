@@ -6,3 +6,4 @@ const controller = new Controller();
 
 router.get(`/`, controller.get);
 router.get(`/:id`, controller.getOne);
+router.delete(`/:id`, controller.delete);

@@ -1,14 +1,21 @@
+import { IIdentity, IPersistedEntity, IPeristentStoreSync, PeristentStoreSyncStatus, generateUuid } from '../entity';
+import { KV } from '../../kv';
 
-export interface ITaskState {
-  id: string;
-  description?: string;
+export interface ITaskState extends IIdentity, IPeristentStoreSync {
+  id: string,
+  description: (string | null);
+  tags: (KV | null);
 }
 
-export class Task {
-  private static readonly _null = new Task();
-  private readonly _state: ITaskState = Task.emptyState;
+type StateOrNull = (ITaskState | null);
+type From<T> = (T extends Array<ITaskState> ? Array<Task> : Task);
 
-  constructor(state: ITaskState = null) {
+export class Task implements IPersistedEntity {
+  private static _null: Task;
+  private static _emptyState: Readonly<ITaskState>;
+  private readonly _state: ITaskState;
+
+  constructor(state: StateOrNull = null) {
     this._state = Task.coerce(state);
   }
 
@@ -16,8 +23,25 @@ export class Task {
     return (this._state.id || '');
   }
 
-  public set id(value: string) {
-    this._state.id = (value || '');
+  public get uuid(): string {
+    return (this._state.uuid || '');
+  }
+
+  public get isNull(): boolean {
+    return (Task.null === this);
+  }
+
+  public get syncStatus(): PeristentStoreSyncStatus {
+    return this._state.syncStatus;
+  }
+
+  public set syncStatus(value: PeristentStoreSyncStatus) {
+    this._state.syncStatus = (value || 'unknown');
+  }
+
+  public setSyncStatus(value: PeristentStoreSyncStatus): Task {
+    this.syncStatus = value;
+    return this;
   }
 
   public get description(): string {
@@ -28,39 +52,48 @@ export class Task {
     this._state.description = (value || '');
   }
 
-  public toString(): string {
-    return this.id;
+  public get tags(): KV {
+    return { ...(this._state.tags || (this._state.tags = {})) };
   }
 
-  public get state(): ITaskState {
+  public toString(): string {
+    return this.uuid;
+  }
+
+  public get state(): Readonly<ITaskState> {
     return { ...this._state };
   }
 
-  public static null(): Task {
-    Task._null._state.id = null;
-    Task._null._state.description = '';
-    return Task._null;
+  public static get null(): Task {
+    return (Task._null ?? (Task._null = new Task(Object.freeze({ ...Task.emptyState, uuid: 'null' }))));
   }
 
-  public static get emptyState(): ITaskState {
-    return {
+  public static get emptyState(): Readonly<ITaskState> {
+    return (Task._emptyState || (Task._emptyState = Object.freeze({
       id: '',
-      description: ''
-    };
+      uuid: '',
+      description: '',
+      tags: {},
+      syncStatus: 'unknown'
+    })));
   }
 
-  public static coerce(source: ITaskState): ITaskState {
-    const val = (source || Task.emptyState);
+  public static coerce(source: StateOrNull): ITaskState {
+    const emp = Task.emptyState;
+    const val = (source || emp);
 
     return {
-      id: (val.id || null),
-      description: (val.description || '')
+      ...val,
+      id: (val.id || emp.id),
+      uuid: (val.uuid || generateUuid()),
+      description: (val.description || emp.description),
+      tags: (val.tags || emp.tags),
+      syncStatus: ((!source) ? 'new' : (val.syncStatus || emp.syncStatus)),
     };
   }
 
-  public static from(states: ITaskState[]): Task[] {
-    return (states || []).filter((s) => Boolean(s)).map((s) => {
-      return (new Task(s));
-    })
+  public static from<T extends (Array<ITaskState> | ITaskState)>(states: T): From<T> {
+    const val: (Array<ITaskState> | ITaskState) = (states || []);
+    return ((Array.isArray(val)) ? val.map((s) => (new Task(s))) : new Task(val)) as From<T>;
   }
 }

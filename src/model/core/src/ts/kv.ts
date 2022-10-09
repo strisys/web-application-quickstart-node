@@ -1,19 +1,20 @@
 export type WellKnownKey = ('is-testing');
 
-export type KV = { [key:string]: any };
+export type KV = Record<string, any>;
+type KVStoreEntryOrNull = (KVStoreEntry | null);
 
 export class KVStoreEntry {
   public static readonly null = new KVStoreEntry('null', '', true);
   private readonly _key: string;
   private readonly _isFrozen: boolean;
-  private readonly _metaData: { [key:string]: any };
+  private readonly _metaData: { [key: string]: any };
   private _value: any;
 
   public constructor(key: string, value: any, isFrozen: boolean, metaData: KV = {}) {
     this._key = key;
     this._value = value;
     this._isFrozen = isFrozen
-    this._metaData = { ...(metaData || {})};
+    this._metaData = { ...(metaData || {}) };
   }
 
   public get key(): string {
@@ -42,7 +43,7 @@ export class KVStoreEntry {
 }
 
 export class KVStore {
-  private static readonly _stores: { [key:string]: KVStore } = {};
+  private static readonly _stores: { [key: string]: KVStore } = {};
   private readonly _inner: { [key: (string | WellKnownKey)]: KVStoreEntry } = {};
   private readonly _context: string;
 
@@ -73,12 +74,12 @@ export class KVStore {
     this._inner['is-testing'].value = value;
   }
 
-  public get(key: (string | WellKnownKey)): KVStoreEntry {
+  public get(key: (string | WellKnownKey)): KVStoreEntryOrNull {
     const current = this.tryGet(key);
     return ((current) ? current : null)
   }
 
-  private tryGet(key: (string | WellKnownKey)): KVStoreEntry {
+  private tryGet(key: (string | WellKnownKey)): KVStoreEntryOrNull {
     return (this._inner[key] || null);
   }
 

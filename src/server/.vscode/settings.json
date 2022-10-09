@@ -3,8 +3,10 @@
     "**/js": true,
     "**/scripts": true,
     "**/public": true,
-    ".editorconfig": true,
-    ".eslintrc.js": true,
-    ".gitignore": true
+    "**/.npmrc": true,
+    "**/.editorconfig": true,
+    "**/.eslintrc.js": true,
+    "**/.gitignore": true,
+    "**/tsconfig.json": true
   }
 }

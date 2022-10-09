@@ -1,6 +1,8 @@
 {
   "files.exclude": {
     "**/src/js": true,
-    "**/.editorconfig": true
+    "**/.editorconfig": true,
+    "**/.eslintrc.js": true,
+    "**/.npmrc": true
   },
 }

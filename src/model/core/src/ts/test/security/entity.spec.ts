@@ -7,11 +7,12 @@ describe('UserProfile', () => {
   describe('constructor', function () {
     it('should contain the expected state', async () => {
       // Assemble/Act
-      const state: IIdentityState = { 
-        id: '1', 
-        email: `name@email.com`, 
-        displayName: 'Stephen Trudel', 
-        settings: { 'initial-path': '/dashboard' } 
+      const state: IIdentityState = {
+        id: '1',
+        uuid: '',
+        email: `name@email.com`,
+        displayName: 'Stephen Trudel',
+        settings: { 'initial-path': '/dashboard' }
       };
 
       const entity = new Identity(state)

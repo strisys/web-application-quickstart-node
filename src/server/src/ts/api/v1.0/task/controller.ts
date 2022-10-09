@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { getLogger } from 'model-server';
 import httpStatus from 'http-status-codes';
+import { getLogger } from 'model-server';
 import { TaskRepository, Task } from 'model-server';
 
-const logger = getLogger('customer-controller')
+const logger = getLogger('api:v1.0:task');
 const repository = new TaskRepository();
 
 export class Controller {
@@ -23,13 +23,11 @@ export class Controller {
     const entity = await repository.getOne(req.params.id);
 
     if (entity) {
-      res.status(httpStatus.OK);
-      res.jsonp(entity.state);
+      res.status(httpStatus.OK).jsonp(entity.state);
       return;
     }
 
-    res.status(httpStatus.NOT_FOUND);
-    res.jsonp({});
+    res.status(httpStatus.NOT_FOUND).jsonp({});
   }
 
   public async delete(req: Request, res: Response): Promise<void> {
@@ -37,16 +35,16 @@ export class Controller {
     const entity = (await repository.getOne(req.params.id));
 
     if (entity) {
-      await repository.delete(entity);
-      logger(`deleted one entity (id:=${req.params.id}) ...`)
+      const result = (await repository.deleteOne(entity));
 
-      res.status(httpStatus.OK);
-      res.jsonp(entity.state);
-      return;
+      if ((result) && (!result.isNull)) {
+        logger(`deleted entity (id:=${req.params.id}) ...`);
+        res.status(httpStatus.OK).jsonp(entity.state);
+        return;
+      }
     }
 
     logger(`delete failed.  entity not found. (id:=${req.params.id}) ...`)
-    res.status(httpStatus.NOT_FOUND);
-    res.jsonp({});
+    res.status(httpStatus.NOT_FOUND).jsonp({});
   }
 }

@@ -1,10 +1,12 @@
 {
   "files.exclude": {
     "**/src/js": true,
-    ".editorconfig": true,
-    ".eslintrc.js": true,
-    ".npmrc": true,
+    "**/.editorconfig": true,
+    "**/.eslintrc.js": true,
+    "**/.npmrc": true,
     "**/.env": true,
-    "scripts": true,
+    "**/scripts": true,
+    "**/tsconfig.json": true,
+    "**/ReadMe.md": true,
   }
 }

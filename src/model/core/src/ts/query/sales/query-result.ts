@@ -1,15 +1,20 @@
+import { IIdentity, generateUuid } from '../../biz';
 import { ISalesEntryState } from './sales-entry';
 
-export interface ISalesEntryQueryResultState {
+export interface ISalesEntryQueryResultState extends IIdentity {
   id: string,
   data?: ISalesEntryState[]
 }
 
+type From<T> = (T extends Array<ISalesEntryQueryResultState> ? Array<SalesEntryQueryResult> : SalesEntryQueryResult);
+type StateOrNull = (ISalesEntryQueryResultState | null);
+
 export class SalesEntryQueryResult {
-  public static readonly _null = new SalesEntryQueryResult();
-  private readonly _state: ISalesEntryQueryResultState = SalesEntryQueryResult.emptyState;
-  
-  constructor(state: ISalesEntryQueryResultState = null) {
+  public static _null = new SalesEntryQueryResult();
+  private static _emptyState: Readonly<ISalesEntryQueryResultState>;
+  private readonly _state: ISalesEntryQueryResultState;
+
+  constructor(state: StateOrNull = null) {
     this._state = SalesEntryQueryResult.coerce(state);
   }
 
@@ -17,48 +22,48 @@ export class SalesEntryQueryResult {
     return (this._state.id || '');
   }
 
-  public set id(value: string) {
-    this._state.id = (value || '');
+  public get uuid(): string {
+    return (this._state.uuid || '');
   }
 
   public get data(): ISalesEntryState[] {
     return ((this._state.data) ? [...this._state.data] : []);
   }
 
-  public get name(): string {
-    return this._state.id;
-  }
-
   public toString(): string {
-    return this.name;
+    return this.id;
   }
 
-  public get state(): ISalesEntryQueryResultState {
+  public get state(): Readonly<ISalesEntryQueryResultState> {
     return { ...this._state };
   }
 
   public static get null(): SalesEntryQueryResult {
-    SalesEntryQueryResult._null._state.id = '';
-    return SalesEntryQueryResult._null;
+    return (SalesEntryQueryResult._null ?? (SalesEntryQueryResult._null = new SalesEntryQueryResult(Object.freeze({ ...SalesEntryQueryResult.emptyState, uuid: 'null' }))));
   }
 
-  public static get emptyState(): ISalesEntryQueryResultState {
-    return {
+  public static get emptyState(): Readonly<ISalesEntryQueryResultState> {
+    return (SalesEntryQueryResult._emptyState || (SalesEntryQueryResult._emptyState = Object.freeze({
       id: '',
-      data: [],
-    };
+      uuid: '',
+      data: []
+    })));
   }
 
-  public static coerce(source: ISalesEntryQueryResultState): ISalesEntryQueryResultState {
-    const val = (source || SalesEntryQueryResult.emptyState);
+  public static coerce(source: StateOrNull): ISalesEntryQueryResultState {
+    const emp = SalesEntryQueryResult.emptyState;
+    const val = (source || emp);
 
     return {
-      id: (val.id || null),
-      data: (val.data || []),
+      ...val,
+      id: (val.id || emp.id),
+      uuid: (val.uuid || generateUuid()),
+      data: (val.data || emp.data),
     };
   }
 
-  public static from(state: ISalesEntryQueryResultState): SalesEntryQueryResult {
-    return ((state) ? (new SalesEntryQueryResult(state)) : SalesEntryQueryResult.null);
+  public static from<T extends (Array<ISalesEntryQueryResultState> | ISalesEntryQueryResultState)>(states: T): From<T> {
+    const val: (Array<ISalesEntryQueryResultState> | ISalesEntryQueryResultState) = (states || []);
+    return ((Array.isArray(val)) ? val.map((s) => (new SalesEntryQueryResult(s))) : new SalesEntryQueryResult(val)) as From<T>;
   }
 }

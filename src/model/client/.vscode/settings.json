@@ -1,8 +1,9 @@
 {
   "files.exclude": {
     "**/src/js": true,
-    ".editorconfig": true,
-    ".eslintrc.js": true,
-    "tsconfig.json": true
+    "**/.npmrc": true,
+    "**/.editorconfig": true,
+    "**/.eslintrc.js": true,
+    "**/tsconfig.json": true,
   }
 }

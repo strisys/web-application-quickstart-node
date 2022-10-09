@@ -1,6 +1,7 @@
-import { KV } from "../kv";
+import { IIdentity, generateUuid } from '../biz/entity';
+import { KV } from '../kv';
 
-export interface IIdentityState {
+export interface IIdentityState extends IIdentity {
   id: string;
   email: string;
   displayName: string;
@@ -8,12 +9,15 @@ export interface IIdentityState {
 }
 
 export type UserPreferenceKey = ('initial-path');
+type StateOrNull = (IIdentityState | null);
+type From<T> = (T extends Array<IIdentityState> ? Array<Identity> : Identity);
 
 export class Identity {
-  private static readonly _null = new Identity();
-  private readonly _state: IIdentityState = Identity.emptyState;
+  private static _null: Identity;
+  private static _emptyState: Readonly<IIdentityState>;
+  private readonly _state: IIdentityState;
 
-  constructor(state: IIdentityState = null) {
+  constructor(state: (IIdentityState | null) = null) {
     this._state = Identity.coerce(state);
   }
 
@@ -21,8 +25,8 @@ export class Identity {
     return (this._state.id || '');
   }
 
-  public set id(value: string) {
-    this._state.id = (value || '');
+  public get uuid(): string {
+    return (this._state.uuid || '');
   }
 
   public get email(): string {
@@ -46,41 +50,40 @@ export class Identity {
     return this.email;
   }
 
-  public get state(): IIdentityState {
+  public get state(): Readonly<IIdentityState> {
     return { ...this._state };
   }
 
-  public static null(): Identity {
-    Identity._null._state.id = null;
-    Identity._null._state.email = '';
-    Identity._null._state.displayName = '';
-    Identity._null._state.settings = {};
-    return Identity._null;
+  public static get null(): Identity {
+    return (Identity._null ?? (Identity._null = new Identity(Object.freeze({ ...Identity.emptyState, uuid: 'null' }))));
   }
 
-  public static get emptyState(): IIdentityState {
-    return {
+  public static get emptyState(): Readonly<IIdentityState> {
+    return (Identity._emptyState || (Identity._emptyState = Object.freeze({
       id: '',
+      uuid: '',
       email: '',
       displayName: '',
-      settings: {}
-    };
+      settings: {},
+    })));
   }
 
-  public static coerce(source: IIdentityState): IIdentityState {
-    const val = (source || Identity.emptyState);
+  public static coerce(source: StateOrNull): IIdentityState {
+    const emp = Identity.emptyState;
+    const val = (source || emp);
 
     return {
-      id: (val.id || null),
-      email: (val.email || ''),
-      displayName: (val.displayName || ''),
-      settings: (val.settings || {})
+      ...val,
+      uuid: (val.uuid || generateUuid()),
+      id: (val.id || emp.id),
+      email: (val.email || emp.email),
+      displayName: (val.displayName || emp.displayName),
+      settings: (val.settings || emp.settings),
     };
   }
 
-  public static from(states: IIdentityState[]): Identity[] {
-    return (states || []).map((s) => {
-      return (new Identity(s));
-    })
+  public static from<T extends (Array<IIdentityState> | IIdentityState)>(states: T): From<T> {
+    const val: (Array<IIdentityState> | IIdentityState) = (states || []);
+    return ((Array.isArray(val)) ? val.map((s) => (new Identity(s))) : new Identity(val)) as From<T>;
   }
 }

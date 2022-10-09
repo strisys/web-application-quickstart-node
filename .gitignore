@@ -1,6 +1,7 @@
-# Application output
+# Application Quickstart
 js/
 *.cid
+.subscription
 
 # Logs
 logs
