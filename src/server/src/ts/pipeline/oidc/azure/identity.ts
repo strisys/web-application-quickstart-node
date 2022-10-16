@@ -1,17 +1,8 @@
 import { Request } from 'express';
-import { getLogger } from 'model-server';
-import { IIdentityState } from 'model-server';
+import { getLogger } from '../../../shared/logging';
+import { IIdentityStateAuthenticated } from 'model-server';
 
 const logger = getLogger('pipeline:oidc:azure:identity');
-
-declare global {
-  namespace Express {
-    interface Request {
-      profile: IIdentityState;
-      bearerToken: string
-    }
-  }
-}
 
 const tryExtractEmail = (user: any): string => {
   if (!user) {
@@ -29,7 +20,7 @@ const tryExtractEmail = (user: any): string => {
   return '';
 }
 
-export const tryExtractIdentity = async (req: Request): Promise<IIdentityState> => {
+export const tryExtractIdentity = async (req: Request): Promise<IIdentityStateAuthenticated> => {
   logger('attempting to parse identity from request ...');
 
   const user: any = req.user;
@@ -39,14 +30,16 @@ export const tryExtractIdentity = async (req: Request): Promise<IIdentityState> 
     return null;
   }
 
-  const profile: IIdentityState = {
+  const profile: IIdentityStateAuthenticated = {
     id: user.oid,
     uuid: user.oid,
     email: email,
     displayName: user.displayName,
-    settings: {}
+    settings: {},
+    accessToken: req.accessToken
   }
 
-  logger(`app-specific user profile from request (user:=${JSON.stringify(profile)}`);
+  logger(`app-specific user profile from request (email:=${email}`);
+
   return profile;
 }

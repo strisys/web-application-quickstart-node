@@ -80,6 +80,7 @@ const verifyFn = (req: any, iss: any, sub: any, profile: any, jwtClaims: any, ac
     }
 
     if (!user) {
+      profile.accessToken = req['accessToken'] = access_token;
       store(profile);
       log(`The user profile has been cached successfully. [${profile.displayName}]`);
       return done(null, profile);
@@ -89,26 +90,34 @@ const verifyFn = (req: any, iss: any, sub: any, profile: any, jwtClaims: any, ac
   });
 }
 
-const trySetBearerToken = (request: Request): boolean => {
+const tryGetBearerToken = (request: Request): string => {
   const authorizationValue = request.headers['authorization'];
 
   if (!authorizationValue) {
-    return false;
+    return '';
   }
 
   const parts = authorizationValue.split(' ');
 
   if ((parts.length != 2) || (parts[0] !== 'Bearer')) {
-    return false;
+    return '';
   }
 
-  return ((request['bearerToken'] = (parts[1] || '')).length > 0);
+  return (parts[1] || '');
+}
+
+const trySetBearerToken = (request: Request): boolean => {
+  return Boolean((request['accessToken'] = tryGetBearerToken(request)));
+}
+
+const isAuthenticted = (req: Request): boolean => {
+  return (Boolean(req.user) || (req.isAuthenticated && req.isAuthenticated()));
 }
 
 const ensureAuthenticated = (req: Request, res: Response, next: any): void => {
   log(`ensuring authentication [url:=${req.url}}] ...`);
 
-  if ((req.user) || (req.isAuthenticated())) {
+  if (isAuthenticted(req)) {
     log(`request to ${req.url} is authenticated`);
     return next();
   }
@@ -122,13 +131,13 @@ const ensureAuthenticated = (req: Request, res: Response, next: any): void => {
 };
 
 export const configure = async (app: Application, path = '/*'): Promise<Application> => {
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   authHandlers = {
     codeGrant: (await configureCodeGrant(app)),
     bearer: (await configureBearer(app))
   };
-
-  app.use(passport.initialize());
-  app.use(passport.session());
 
   app.all(path, ensureAuthenticated);
   return app;
@@ -155,8 +164,9 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
     clockSkew: 300
   };
 
-  const strategy: passport.Strategy = new BearerStrategy(options, async (request, user, done) => {
+  const strategy: passport.Strategy = new BearerStrategy(options, async (request: Request, user: any, done) => {
     if (user) {
+      user.accessToken = tryGetBearerToken(request);
       await store(user);
     }
 
@@ -168,7 +178,7 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
   // Use this for debugging
   // return passport.authenticate('oauth-bearer', { session: false }, (a: any, info: any, error: any) => {
   //   if (error) {
-  //     loggerFn(`Failed to validate bearer token (error:=${error})`);
+  //     log(`Failed to validate bearer token (error:=${error})`);
   //   }
   // });
 
@@ -243,70 +253,88 @@ export const configureCodeGrant = async (app: Application): Promise<Handler> => 
   const reducedConfig: Omit<IOIDCStrategyOptionWithRequest, ('clientSecret' | 'clientID')> = cfg;
   log(`passport.js OIDC strategy configured (config:=${JSON.stringify(reducedConfig)})`);
 
-  app.use((req: Request, res: Response, next: any) => {
-    res.locals.user = req.user;
-    next();
-  });
-
-  app.get('/islogin', (req, res, next) => {
-    res.send(req.isAuthenticated());
-    next();
-  });
-
-  app.all('/fail', (req: Request, res: Response) => {
-    log(`OIDC failure`);
-    const error = req.flash('error');
-    res.status(500).end(`OAuth authentication failed (message:=${JSON.stringify(error)})`);
-  });
-
-  const authFn: Handler = passport.authenticate('azuread-openidconnect', { failureRedirect: '/fail', failureFlash: true });
-
-  app.get('/login', (req: Request, res: Response, next: any) => {
-    log(`attempt to login to ${req.url}.  user may be redirected to IdP`);
-    authFn(req, res, next);
-  });
-
-  const redeemCode = (req: Request, res: Response, next: any) => {
-    log(`attempt to redeem authentication code [url:=${req.url}]`);
-    authFn(req, res, next);
-  };
-
-  app.post('/signin', redeemCode, (req: Request, res: Response, next: any) => {
-    log(`azure data received successfully`);
-    res.redirect(URL_FRONTEND)
-  });
-
-  app.get('/user', (req: Request, res: Response, next: any) => {
-    log(`attempt get user information [user:=${JSON.stringify(req.user)}]`);
-
-    if (!req.user) {
-      res.status(httpStatus.NOT_FOUND).send({});
-      return;
-    }
-
-    res.status(httpStatus.OK).jsonp(req.user)
-  });
-
-  app.get('/logout', async (req: Request, res: Response, next: any) => {
-    if (!req.isAuthenticated()) {
+  const configurePaths = (): Handler => {
+    app.use((req: Request, res: Response, next: any) => {
+      res.locals.user = req.user;
       next();
-      return;
-    }
+    });
 
-    await remove(req.user);
+    app.get('/isloggedin', (req, res, next) => {
+      res.send(isAuthenticted(req));
+      next();
+    });
 
-    req['session'].destroy((err: any) => {
-      const doneLogout = (err: any): void => {
-        log(`logout complete (err:=${err})`);
+    app.all('/fail', (req: Request, res: Response) => {
+      log(`OIDC failure`);
+      const error = req.flash('error');
+      res.status(500).end(`OAuth authentication failed (message:=${JSON.stringify(error)})`);
+    });
+
+    const authFn: Handler = passport.authenticate('azuread-openidconnect', { failureRedirect: '/fail', failureFlash: true });
+
+    app.get('/login', (req: Request, res: Response, next: any) => {
+      log(`attempt to login to ${req.url}.  user may be redirected to IdP`);
+      authFn(req, res, next);
+    });
+
+    const redeemCode = (req: Request, res: Response, next: any) => {
+      log(`attempt to redeem authentication code [url:=${req.url}]`);
+      authFn(req, res, next);
+    };
+
+    app.post('/signin', redeemCode, (req: Request, res: Response, next: any) => {
+      log(`azure data received successfully`);
+      res.redirect(URL_FRONTEND)
+    });
+
+    app.get('/user', (req: Request, res: Response, next: any) => {
+      log(`attempt get user information [user:=${JSON.stringify(req.user)}]`);
+      const user: any = req.user;
+      delete user.accessToken;
+
+      if (!user) {
+        res.status(httpStatus.NOT_FOUND).send({});
+        return;
       }
 
-      req.logOut({
-        keepSessionInfo: false
-      }, doneLogout);
-
-      res.redirect(passconfig.destroySessionUrl);
+      res.status(httpStatus.OK).jsonp(user)
     });
-  });
 
-  return authFn;
+    app.get('/signout', (req: Request, res: Response, next: any) => {
+      log(`------------------------------------------------------------------------------------------------------------------------`);
+      log(`signout invoked by idp (GET) (headers:=${JSON.stringify(req.headers)}, body:=${JSON.stringify(req.body)}`);
+      log(`------------------------------------------------------------------------------------------------------------------------`);
+      res.status(httpStatus.OK).jsonp({});
+    });
+
+    app.get('/logout', async (req: Request, res: Response, next: any) => {
+      if (isAuthenticted(req)) {
+        await remove(req.user);
+
+        log(`------------------------------------------------`);
+        log(`destroying session for user (email:=${req!.user!.toString()})`);
+        log(`------------------------------------------------`);
+
+        req['session'].destroy((err: any) => {
+          if (err) {
+            log(`failed to destroy session for user (err:=${err})`);
+          }
+
+          const doneLogout = (err: any): void => {
+            log(`logout complete (err:=${err})`);
+          }
+
+          req.logOut && req.logOut({
+            keepSessionInfo: false
+          }, doneLogout);
+        });
+      }
+
+      res.redirect(`https://login.microsoftonline.com/${TENANT}/oauth2/logout`);
+    });
+
+    return authFn;
+  }
+
+  return configurePaths();
 };

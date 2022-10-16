@@ -1,18 +1,17 @@
 import { Application, Request, Response, NextFunction } from 'express';
-import { getLogger } from 'model-server';
-import { IIdentityState } from 'model-server';
+import { IIdentityStateAuthenticated, getLogger } from 'model-server';
 import { tryExtractIdentity } from './oidc/azure/identity';
 
 export type IdentityProvider = ('azure-ad');
-export type IdentityHandler = (req: Request) => Promise<IIdentityState>;
+export type IdentityHandler = (req: Request) => Promise<IIdentityStateAuthenticated>;
 
-const logger = getLogger('identity-middleware');
+const logger = getLogger('pipeline:oidc:identity');
 
 declare global {
   namespace Express {
     interface Request {
-      profile: IIdentityState;
-      bearerToken: string
+      profile: IIdentityStateAuthenticated;
+      accessToken: string
     }
   }
 }

@@ -1,7 +1,6 @@
 **/docs
 **/public
 **/build
-**/.env*
 **/.classpath
 **/.dockerignore
 **/.git
