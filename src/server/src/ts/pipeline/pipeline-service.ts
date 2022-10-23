@@ -51,7 +51,7 @@ export class PipelineService {
     app.use(cookieParser());
     app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
     app.use(flash());
-    configureHealth(app);
+    // configureHealth(app);
     await configureOidc(app);
     configureIdentity(app, 'azure-ad');
     setApiRoutes(app);
