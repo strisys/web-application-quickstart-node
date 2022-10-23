@@ -148,7 +148,7 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
   const config: Record<string, any> = (await getConfigValues());
   const TENANT = config[AppConfigKey.AzureAdTenant];
   const APP_ID = config[AppConfigKey.AzureAdClientId];
-  const AUDIENCE = config[AppConfigKey.ApiAudience];
+  const AUDIENCE = config[AppConfigKey.AzureAdClientId];
 
   // https://github.com/AzureAD/passport-azure-ad#42-bearerstrategy
   const options: IBearerStrategyOptionWithRequest = {

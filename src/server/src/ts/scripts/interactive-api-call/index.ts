@@ -7,7 +7,7 @@ type TargetApiParameters = {
 }
 
 const azParameters: TargetApiParameters = {
-  clientId: '<client-id here>',
+  clientId: '5c3f9ed1-652e-4684-b82d-3586ba549308',
 }
 
 async function getData(token: AccessToken): Promise<void> {
