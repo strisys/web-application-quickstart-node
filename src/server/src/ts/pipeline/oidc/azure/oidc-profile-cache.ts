@@ -21,7 +21,7 @@ export const fetch = (data: (string | { [key: string]: any })): Promise<any> => 
 };
 
 export const store = (profile: any): Promise<any> => {
-  loggerFn(`attempting to store user profile (${JSON.stringify(profile)}) ...`);
+  loggerFn(`attempting to store user profile (${JSON.stringify(profile.email)}) ...`);
 
   if (!profile) {
     return Promise.resolve(profile);

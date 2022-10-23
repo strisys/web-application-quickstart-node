@@ -16,7 +16,6 @@ declare global {
   }
 }
 
-
 export const configure = (app: Application, idp: IdentityProvider): Application => {
   let handler: IdentityHandler = null;
 

@@ -18,7 +18,9 @@
     "test": "npm-run-all transpile mocha",
     "start-dev": "npm-run-all transpile run-server-dev",
     "start-all": "npm-run-all --parallel transpile run-browser --sequential run-server",
-    "start": "npm-run-all run-server"
+    "start": "npm-run-all run-server",
+    "run-interactive-api-call-script": "start ts-node ./src/ts/scripts/interactive-api-call/index.ts",
+    "run-api-call-script": "npm-run-all --sequential transpile run-server-dev run-interactive-api-call-script"
   },
   "author": "Stephen Trudel",
   "license": "ISC",
@@ -35,6 +37,7 @@
     "socket.io": "^4.5.1"
   },
   "devDependencies": {
+    "@azure/identity": "^3.0.0",
     "@types/chai": "^4.3.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "~4.17.13",
@@ -48,6 +51,7 @@
     "chai": "^4.3.6",
     "concurrently": "^7.0.0",
     "cross-env": "^7.0.3",
+    "cross-fetch": "^3.1.5",
     "mocha": "^9.2.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",

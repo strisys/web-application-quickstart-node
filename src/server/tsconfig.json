@@ -92,5 +92,8 @@
   },
   "include": [
     "./src/ts"
+  ],
+  "exclude": [
+    "./src/scripts"
   ]
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Application, Request, Response, Handler } from 'express';
+import { Application, Request, Response, Handler, RequestHandler, NextFunction } from 'express';
 import { OIDCStrategy, IOIDCStrategyOptionWithRequest, BearerStrategy, IBearerStrategyOptionWithRequest } from 'passport-azure-ad';
 import passport from 'passport';
 import httpStatus from 'http-status-codes';
@@ -28,6 +28,8 @@ enum AppConfigKey {
   ApiAudience = 'AZURE-AD-REST-API-AUDIENCE',
 }
 
+const log = getLogger('oidc-azure-ad');
+
 const isInAzure = (): boolean => {
   return Boolean(process.env['WEBSITE_INSTANCE_ID']);
 }
@@ -41,8 +43,6 @@ const useAppServiceAuth = async (): Promise<boolean> => {
   const value = ((config[AppConfigKey.UseAppServiceAuth] || '') as string).toLowerCase();
   return ((value === 'true') || (value === '1'));
 }
-
-const log = getLogger('oidc-azure-ad');
 
 // https://github.com/AzureAD/passport-azure-ad/tree/dev
 const requiredScopes = ['User.Read', 'openid', 'email', 'profile', 'offline_access'];
@@ -115,7 +115,7 @@ const isAuthenticted = (req: Request): boolean => {
 }
 
 const ensureAuthenticated = (req: Request, res: Response, next: any): void => {
-  log(`ensuring authentication [url:=${req.url}}] ...`);
+  log(`ensuring authentication [url:=${req.url}, headers:=${JSON.stringify(Object.keys(req.headers))}}] ...`);
 
   if (isAuthenticted(req)) {
     log(`request to ${req.url} is authenticated`);
@@ -123,6 +123,7 @@ const ensureAuthenticated = (req: Request, res: Response, next: any): void => {
   }
 
   if (trySetBearerToken(req)) {
+    log(`bearer token detected.`);
     authHandlers['bearer'](req, res, next);
     return;
   }
@@ -174,6 +175,7 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
   });
 
   passport.use(strategy);
+  log(`passport.js Bearer strategy configured (config:=${JSON.stringify(Object.keys(options))})`);
 
   // Use this for debugging
   // return passport.authenticate('oauth-bearer', { session: false }, (a: any, info: any, error: any) => {
@@ -182,7 +184,16 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
   //   }
   // });
 
-  return passport.authenticate('oauth-bearer', { session: false });
+  const exec: Handler = passport.authenticate('oauth-bearer', { session: false });
+
+  // const authenticate = (): Handler => {
+  //   return (req: Request, res: Response, next: NextFunction) => {
+  //     log(`executing bearer token authentication ...`);
+  //     exec(req, res, next);
+  //   }
+  // };
+
+  return exec;
 }
 
 export const configureCodeGrant = async (app: Application): Promise<Handler> => {
@@ -251,7 +262,7 @@ export const configureCodeGrant = async (app: Application): Promise<Handler> => 
   passport.use(new OIDCStrategy(cfg, verifyFn));
 
   const reducedConfig: Omit<IOIDCStrategyOptionWithRequest, ('clientSecret' | 'clientID')> = cfg;
-  log(`passport.js OIDC strategy configured (config:=${JSON.stringify(reducedConfig)})`);
+  log(`passport.js OIDC strategy configured (config:=${JSON.stringify(Object.keys(reducedConfig))})`);
 
   const configurePaths = (): Handler => {
     app.use((req: Request, res: Response, next: any) => {
