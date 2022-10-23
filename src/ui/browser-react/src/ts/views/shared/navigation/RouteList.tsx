@@ -4,7 +4,7 @@ import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone
 
 import { SearchViewContainer } from '../../features/search/ViewContainer';
 import { TasksViewContainer } from '../../features/task-management/ViewContainer';
-import { SalesEntryContainer } from '../../features/sales/Container';
+import { SalesEntryContainer } from '../../features/sales/ViewContainer';
 import { FourOFourViewContainer } from '../../features/404/ViewContainer';
 
 export class MenuItem {
@@ -14,7 +14,6 @@ export class MenuItem {
 
 export const routeList: MenuItem[] = [
   new MenuItem('root', 'Sales', '/', <SalesEntryContainer />, null, false),
-  // new MenuItem('root', 'Tasks', '/', <TasksViewContainer />, null, false),
   // new MenuItem('search', 'Search', '/search', <SearchViewContainer />, <ManageSearchTwoToneIcon />),
   new MenuItem('tasks', 'Tasks', '/tasks', <TasksViewContainer />, <PlaylistAddCheckTwoToneIcon />),
   new MenuItem('sales', 'Sales', '/sales', <SalesEntryContainer />, <MonetizationOnTwoToneIcon />),

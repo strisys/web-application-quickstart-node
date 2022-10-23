@@ -6,6 +6,8 @@ export const KEY_LENGTH = 16;
 // https://github.com/CyberAP/nanoid-dictionary
 const generator = customAlphabet(alphanumeric, KEY_LENGTH);
 
+export type TypeOrNull<T> = (T | null);
+
 export interface IIdentity<T extends string = string> {
   uuid: T;
 }

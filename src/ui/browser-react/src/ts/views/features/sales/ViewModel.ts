@@ -5,7 +5,7 @@ export { SalesEntryQueryResult, getLogger };
 export type { KV };
 export { isBrowser }
 
-export type TransitionName = ('loading' | 'loaded');
+export type TransitionName = ('start' | 'loading' | 'loaded');
 const logger = getLogger('sales-entry-viewmodel');
 
 export const regionSortMap: { [key: string]: number } = {
@@ -46,9 +46,13 @@ export class MasterViewModel extends ViewModelBase<MasterViewModel> {
   public static createNew(observeTransition: (vw: MasterViewModel) => void): MasterViewModel {
     return (new MasterViewModel('sales-entry-master', observeTransition));
   }
-  
+
   protected override create(seriesName: string, observeTransition: (vw: MasterViewModel) => void, transitionName: string): MasterViewModel {
     return (new MasterViewModel(seriesName, observeTransition, transitionName));
+  }
+
+  public isTransitionOneOf(...transitions: TransitionName[]): boolean {
+    return super.isTransitionOneOf(transitions);
   }
 
   public get result(): SalesEntryQueryResult {
@@ -77,7 +81,7 @@ export class MasterViewModel extends ViewModelBase<MasterViewModel> {
       clearTimeout(timeoutHandle);
       tryRaiseEvent();
     }, 500);
-   
+
   }
 
   public registerContextChanged(fn: ContextChanged) {

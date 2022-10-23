@@ -6,17 +6,19 @@ import Grow from '@mui/material/Grow';
 import { ViewModel, Task, TransitionName, getLogger } from './ViewModel';
 import { CardListView } from './CardListView'
 
+const logger = getLogger('task-view-container');
+
 export function TasksViewContainer() {  
-  const logger = getLogger('task-view-container');
   logger(`executing component function ...`);
 
   const create = (): ViewModel => {
-    const vm = ViewModel.createNew((vm: ViewModel) => {
+    const setState = (vm: ViewModel) => {
       logger(`setting view model component state (event:=${vm.transitionName}, vm:=${vm}) ...`);
       setVM(vm);
-      setOpen(vm.isTransitionOneOf(['genisis', 'loading']));
-    });
+      setOpen(vm.isTransitionOneOf('genesis', 'loading'));
+    };
 
+    const vm = ViewModel.createNew(setState);
     vm.load();
     
     return vm;
@@ -50,5 +52,3 @@ export function TasksViewContainer() {
     </React.Fragment>
   )
 }
-
-export default TasksViewContainer;

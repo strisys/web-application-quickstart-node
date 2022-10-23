@@ -3,7 +3,7 @@ import { ViewModelBase } from '../../shared/ViewModelBase'
 import { TaskRepository, Task, getLogger } from 'model-client';
 export { Task, getLogger };
 
-export type TransitionName = ('loading' | 'loaded' | 'mark-complete' | 'processing');
+export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'mark-complete' | 'processing');
 const logger = getLogger('task-management-viewmodel');
 
 export class ViewModel extends ViewModelBase<ViewModel> {
@@ -19,6 +19,10 @@ export class ViewModel extends ViewModelBase<ViewModel> {
 
   protected override create(seriesName: string, observeTransition: (vw: ViewModel) => void, transitionName: string): ViewModel {
     return (new ViewModel(seriesName, observeTransition, transitionName));
+  }
+
+  public isTransitionOneOf(...transitions: TransitionName[]): boolean {
+    return super.isTransitionOneOf(transitions);
   }
 
   public get entities(): Task[] {

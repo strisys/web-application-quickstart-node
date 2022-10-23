@@ -10,6 +10,8 @@ import { SalesEntryMasterGrid } from './GridMaster';
 import { SalesEntryDetailGrid } from './GridDetail';
 import { Link } from '@mui/material';
 
+const logger = getLogger('sales-entry-view-container');
+
 const RootGridBase = styled('div')(() => ({
   display: 'grid',
   margin: '15px 25px 0px 25px' ,
@@ -62,13 +64,11 @@ const LicenseGrid = styled(CenteredHorizontalFlexGrid)(({theme}) => ({
 }));
 
 export function SalesEntryContainer() {  
-  const logger = getLogger('sales-entry-view-container');
-
   const create = (): MasterViewModel => {
     const vm = MasterViewModel.createNew((vm: MasterViewModel) => {
       logger(`setting view model component state (transition:=${vm.transitionName}, vm:=${vm}) ...`);
       setVM(vm);
-      setOpen(vm.isTransitionOneOf(['start', 'loading']));
+      setOpen(vm.isTransitionOneOf('start', 'loading'));
     });
 
     vm.load();
@@ -106,5 +106,3 @@ export function SalesEntryContainer() {
     </Grow>
   );
 }
-
-export default SalesEntryContainer;
