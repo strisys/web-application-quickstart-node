@@ -4,7 +4,7 @@ import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone
 
 import { SearchViewContainer } from '../../features/search/ViewContainer';
 import { TasksViewContainer } from '../../features/task-management/ViewContainer';
-import { SalesEntryContainer } from '../../features/sales/ViewContainer';
+import { SalesEntryContainer } from '../../features/sales-report/ViewContainer';
 import { FourOFourViewContainer } from '../../features/404/ViewContainer';
 
 export class MenuItem {

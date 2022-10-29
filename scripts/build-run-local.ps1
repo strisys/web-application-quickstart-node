@@ -15,8 +15,10 @@ function Invoke-LoginAzure {
 
     if (!$isLoggedIn) {
         az login
-        az account set --subscription $subscription
-    }    
+    }   
+    
+    az ad signed-in-user show
+    az account set --subscription $subscription 
 }
 
 function Write-Section($params) {
@@ -56,7 +58,7 @@ function Invoke-NpmInstall {
     Set-Location ..\..\..\
 }
 
-# Invoke-LoginAzure
+Invoke-LoginAzure
 Invoke-NpmInstall
 
 pause
