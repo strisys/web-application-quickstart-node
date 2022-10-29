@@ -58,7 +58,7 @@ function Invoke-NpmInstall {
     Set-Location ..\..\..\
 }
 
-Invoke-LoginAzure
+# Invoke-LoginAzure
 Invoke-NpmInstall
 
 pause
