@@ -1,0 +1,17 @@
+trigger:
+- deploy
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  persistCredentials: true
+- task: AzureCLI@2
+  displayName: Build and Publish Image to Azure Container Registry
+  inputs:
+    azureSubscription: sp-web-application-quickstart-azure-pipelines
+    workingDirectory: ./scripts
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: './azure-build-publish-ci.ps1'
