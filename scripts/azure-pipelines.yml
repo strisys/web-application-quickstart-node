@@ -10,7 +10,7 @@ steps:
 - task: AzureCLI@2
   displayName: Build and Publish Image to Azure Container Registry
   inputs:
-    azureSubscription: sp-web-application-quickstart-azure-pipelines
+    azureSubscription: strisys-devops-web-application-quickstart
     workingDirectory: ./scripts
     scriptType: pscore
     scriptLocation: inlineScript
