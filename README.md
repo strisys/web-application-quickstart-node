@@ -1,7 +1,5 @@
 # Full Stack Web Application Quickstart using DDD (Node version)
 
----
-
 [![Build Status](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_apis/build/status/strisys.web-application-quickstart-node?branchName=main)](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_build/latest?definitionId=8&branchName=main)
 
 ### Overview
