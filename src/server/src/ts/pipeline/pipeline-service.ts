@@ -43,22 +43,28 @@ export class PipelineService {
 
     logger(`configuring pipeline ...`);
 
-    app.use(morgan(morganFormat));
-    configureDebug(app);
-    app.use(bodyParser.text({ limit: '99mb' }));
-    app.use(bodyParser.json({ limit: '99mb' }));
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(cookieParser());
-    app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
-    app.use(flash());
-    // configureHealth(app);
-    // await configureOidc(app);
-    configureIdentity(app, 'azure-ad');
-    setApiRoutes(app);
-    app.use(staticfile);
-    app.all('*', reroute(publicPath));
-    app.use(handleError);
-    app.disable(`x-powered-by`);
+    try {
+      app.use(morgan(morganFormat));
+      configureDebug(app);
+      app.use(bodyParser.text({ limit: '99mb' }));
+      app.use(bodyParser.json({ limit: '99mb' }));
+      app.use(bodyParser.urlencoded({ extended: false }));
+      app.use(cookieParser());
+      app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
+      app.use(flash());
+      configureHealth(app);
+      await configureOidc(app);
+      configureIdentity(app, 'azure-ad');
+      setApiRoutes(app);
+      app.use(staticfile);
+      app.all('*', reroute(publicPath));
+      app.use(handleError);
+      app.disable(`x-powered-by`);
+    }
+    catch (error) {
+      logger(`failed to configure HTTP pipeline (error:=${error})`);
+      throw error;
+    }
 
     logger(`pipeline configured successfully!`);
 

@@ -1,10 +1,12 @@
 
 import { ViewModelBase } from '../../shared/ViewModelBase'
-import { TaskRepository, Task, getLogger } from 'model-client';
-export { Task, getLogger };
+import { TaskRepository, Task, setProperty, getLogger } from 'model-client';
+export { Task, setProperty, getLogger };
 
-export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'mark-complete' | 'processing');
-const logger = getLogger('task-management-viewmodel');
+export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'mark-complete' | 'add-task' | 'processing');
+export const MODULE_NAME = 'task-management';
+
+const logger = getLogger(`${MODULE_NAME}-viewmodel`);
 
 export class ViewModel extends ViewModelBase<ViewModel> {
   private readonly _repository = new TaskRepository();
@@ -14,7 +16,7 @@ export class ViewModel extends ViewModelBase<ViewModel> {
   }
 
   public static createNew(observeTransition: (vw: ViewModel) => void): ViewModel {
-    return (new ViewModel('task-management', observeTransition));
+    return (new ViewModel(MODULE_NAME, observeTransition));
   }
 
   protected override create(seriesName: string, observeTransition: (vw: ViewModel) => void, transitionName: string): ViewModel {
@@ -39,12 +41,24 @@ export class ViewModel extends ViewModelBase<ViewModel> {
     }
 
     // simulate long running process
-    const delay = 1500;
+    const delay = 1000;
 
     const handle = setTimeout(() => {
       clearTimeout(handle);
       exec();
     }, delay);
+  }
+
+  public async post(entity: Task): Promise<Task> {
+    const next = this.setNext('processing');
+
+    const result = (await next._repository.post(entity));
+    logger(`post complete (${JSON.stringify(result)})`);
+
+    const entities = (await next._repository.get());
+    next.setNext('loaded', { entities });
+
+    return result[0];
   }
 
   public markComplete(entity: Task) {

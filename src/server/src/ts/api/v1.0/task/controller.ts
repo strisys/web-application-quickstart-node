@@ -1,25 +1,22 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
-import { getLogger } from 'model-server';
-import { TaskRepository, Task } from 'model-server';
+import { TaskRepository, Task, getLogger, ITaskState } from 'model-server';
 
 const logger = getLogger('api:v1.0:task');
 const repository = new TaskRepository();
 
 export class Controller {
   public async get(req: Request, res: Response): Promise<void> {
-    res.status(httpStatus.OK);
-
     logger('recieved request for all entities ...')
 
     const entities = await repository.get();
-    const state = entities.map((e: Task) => e.state);
+    const state = entities.map((e) => e.state);
 
-    res.jsonp(state);
+    res.status(httpStatus.OK).jsonp(state);
   }
 
   public async getOne(req: Request, res: Response): Promise<void> {
-    logger(`recieved request for one entity (id:=${req.params.id}) ...`)
+    logger(`recieved ${req.method} request for one entity (id:=${req.params.id}) ...`);
     const entity = await repository.getOne(req.params.id);
 
     if (entity) {
@@ -30,8 +27,27 @@ export class Controller {
     res.status(httpStatus.NOT_FOUND).jsonp({});
   }
 
+  public async post(req: Request, res: Response): Promise<void> {
+    logger(`recieved ${req.method} request ...`);
+    const states: Array<ITaskState> = req.body;
+
+    if (!states) {
+      res.status(httpStatus.BAD_REQUEST).jsonp({});
+      return;
+    }
+
+    try {
+      const result = ((await repository.post(Task.from(states))) || []);
+      res.status(httpStatus.OK).jsonp(result.map((e) => e.state));
+    }
+    catch (e) {
+      logger(`failed to persist entities (error:=${e})`);
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).jsonp({});
+    }
+  }
+
   public async delete(req: Request, res: Response): Promise<void> {
-    logger(`recieved DELETE request for one entity (id:=${req.params.id}) ...`)
+    logger(`recieved ${req.method} request for one entity (id:=${req.params.id}) ...`)
     const entity = (await repository.getOne(req.params.id));
 
     if (entity) {

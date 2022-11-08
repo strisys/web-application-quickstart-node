@@ -5,17 +5,23 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Task, TransitionName, getLogger } from './ViewModel';
+import { Task, TransitionName, getLogger, MODULE_NAME } from './ViewModel';
 
-function CardView({ entity, onEvent }: { entity: Task, onEvent: (eventName: TransitionName, data: any) => void }) {
-  const logger = getLogger('task-view-list');
+const logger = getLogger(`${MODULE_NAME}-task-care-listview`);
+
+type CardViewProps = { 
+  entity: Task, 
+  onEvent: (eventName: TransitionName, data: any) => void 
+};
+
+function CardView({ entity, onEvent }: CardViewProps) {
   logger(`component function invoked (vm:=${JSON.stringify(entity)})`);
 
   return (
     <Card sx={{ minWidth: 275, margin: '5px' }}>
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-          {`task: ${entity.id}`}
+          {`task: ${entity.uuid}`}
         </Typography>
         <Typography variant='h5' component='div'>
           {entity.description}
@@ -28,15 +34,20 @@ function CardView({ entity, onEvent }: { entity: Task, onEvent: (eventName: Tran
   );
 }
 
-export function CardListView({ entities, onEvent }: { entities: Task[], onEvent: (eventName: TransitionName, data: any) => void }) { 
-  let content = [<Typography variant='h5' component='div'>Tasks completed!</Typography>];
+type CardListViewProps = { 
+  entities: Task[], 
+  onEvent: (eventName: TransitionName, data: any) => void 
+}
 
-  if (entities.length > 0) {
+export function CardListView({ entities, onEvent }: CardListViewProps) { 
+  let content = [<Typography variant='h5' component='div'>{'Tasks completed!'}</Typography>];
+
+  if ((entities || []).length > 0) {
     content = entities.map((entity) => {
-      return <CardView key={entity.id} entity={entity} onEvent={onEvent} />
+      return <CardView key={entity.uuid} entity={entity} onEvent={onEvent} />
     });
   }
-  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={5}>

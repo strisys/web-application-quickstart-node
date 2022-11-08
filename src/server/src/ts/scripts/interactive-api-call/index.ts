@@ -7,7 +7,7 @@ type TargetApiParameters = {
 }
 
 const azParameters: TargetApiParameters = {
-  clientId: '<client-id>',
+  clientId: '5c3f9ed1-652e-4684-b82d-3586ba549308',
 }
 
 async function getData(token: AccessToken): Promise<void> {
@@ -32,6 +32,7 @@ async function getData(token: AccessToken): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  console.log(`IMPORTANT: for this to work its assumed 'az login' was used to establish identity`);
   console.log(`getting token ...`);
 
   const credential = new DefaultAzureCredential();

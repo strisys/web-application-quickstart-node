@@ -3,10 +3,27 @@ import Button from '@mui/material/Button';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Grow from '@mui/material/Grow';
+import Fab from '@mui/material/Fab';
+import Zoom from '@mui/material/Zoom';
+import { AddTaskFormDialog, DialogResultValue } from './AddTaskDialog';
+import AddIcon from '@mui/icons-material/Add';
 import { ViewModel, Task, TransitionName, getLogger } from './ViewModel';
 import { CardListView } from './CardListView'
 
 const logger = getLogger('task-view-container');
+
+const fabStyle = {
+  position: 'absolute',
+  bottom: 20,
+  right: 20,
+};
+
+const triggerButtonStyle = {
+  position: 'absolute',
+  bottom: 20,
+  left: 20,
+  fontSize: '7px',
+};
 
 export function TasksViewContainer() {  
   logger(`executing component function ...`);
@@ -26,11 +43,24 @@ export function TasksViewContainer() {
 
   const [vm, setVM] = React.useState(create);
   const [open, setOpen] = React.useState(true);
+  const [entity, setEntity] = React.useState<Task>();
 
-  const onEvent = (eventName: TransitionName, data: any) => {
+  const onEvent = (eventName: TransitionName, data: any = null) => {
     if (eventName === 'mark-complete') {
       vm.markComplete(data as Task);
     }
+
+    if (eventName === 'add-task') {
+      setEntity(new Task());
+    }
+  }
+
+  const onDialogClose = async (result: DialogResultValue, state?: Task): Promise<void> => {
+    if (result === 'submit') {
+      await vm.post(state);
+    }
+    
+    setEntity(null);
   }
 
   if (open) {
@@ -42,13 +72,17 @@ export function TasksViewContainer() {
   }
 
   return (
-    <React.Fragment>
-      <Button onClick={vm.tickle}>Tickle</Button>
+    <>
       <Grow in={true} timeout={1000}>
         <div style={{ margin: 50 }}>
           <CardListView entities={vm.entities} onEvent={onEvent} />
         </div>
       </Grow>
-    </React.Fragment>
+      <Fab sx={fabStyle} onClick={() => onEvent('add-task')} aria-label={'add'} color={'primary'}>
+        <AddIcon  />
+      </Fab>
+      <Button sx={triggerButtonStyle} onClick={vm.tickle} aria-label={'debug render'}>{'debug render'}</Button>
+      <AddTaskFormDialog open={(entity != null)} entity={entity} onClose={onDialogClose} />
+    </>
   )
 }

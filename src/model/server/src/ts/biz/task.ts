@@ -34,15 +34,34 @@ export class TaskRepository {
     return ((state) ? (new Task(state)) : Task.null);
   }
 
+  public post(entities: Array<Task>): Promise<Array<Task>> {
+    if ((!entities) || (!entities.length)) {
+      return Promise.resolve([]);
+    }
+
+    entities.forEach((e) => {
+      const index = cache.findIndex((i) => (i.uuid === e.uuid));
+
+      if (index > -1) {
+        cache[index] = e;
+        return;
+      }
+
+      cache.push(e);
+    });
+
+    return Promise.resolve(entities);
+  }
+
   public deleteOne(entity: Task): Promise<Task> {
     if (!entity) {
-      Promise.resolve(Task.null);
+      return Promise.resolve(Task.null);
     }
 
     logger(`deleting task (id:=${JSON.stringify(entity.state)}) from persistent store ...`);
 
     const isMatch = (task: ITaskState): boolean => {
-      return ((task.id === entity.id) || (task.uuid === entity.id));
+      return (task.uuid === entity.uuid);
     }
 
     const state = cache.find((t) => isMatch(t));
@@ -65,7 +84,7 @@ export class TaskRepository {
     const deleted = (Array.isArray(ids) ? ids : [ids]);
 
     const remove = (task: ITaskState): boolean => {
-      return (!Boolean(deleted.find((d) => (d.id === task.id) || (d.uuid === task.uuid))));
+      return (!Boolean(deleted.find((d) => (d.uuid === task.uuid))));
     }
 
     return Task.from(cache = cache.filter(remove));
