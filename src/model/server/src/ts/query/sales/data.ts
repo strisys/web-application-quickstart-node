@@ -1,7 +1,8 @@
 
 import * as mc from 'model-core';
+type EntryStringOrNull = (mc.ISalesEntryState[] | null);
 
-let cache: mc.ISalesEntryState[] = null;
+let cache: EntryStringOrNull = null;
 
 export const getData = (): mc.ISalesEntryState[] => {
   if (cache) {

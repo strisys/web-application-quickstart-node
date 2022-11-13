@@ -1,12 +1,16 @@
 
 import { ViewModelBase } from '../../shared/ViewModelBase'
-import { TaskRepository, Task, setProperty, getLogger } from 'model-client';
-export { Task, setProperty, getLogger };
+import { TaskRepository, Task, setProperty, getLogger as createLogger } from 'model-client';
+export { Task, setProperty };
 
 export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'mark-complete' | 'add-task' | 'processing');
 export const MODULE_NAME = 'task-management';
 
-const logger = getLogger(`${MODULE_NAME}-viewmodel`);
+export const getLogger = (componentName: string) => {
+  return createLogger(`${componentName}-viewmodel`)
+}
+
+const logger = getLogger(`viewmodel`);
 
 export class ViewModel extends ViewModelBase<ViewModel> {
   private readonly _repository = new TaskRepository();
@@ -61,17 +65,15 @@ export class ViewModel extends ViewModelBase<ViewModel> {
     return result[0];
   }
 
-  public markComplete(entity: Task) {
+  public async markComplete(entity: Task): Promise<Task> {
     const next = this.setNext('processing');
 
-    const exec = async () => {
-      const result = (await next._repository.deleteOne(entity));
-      logger(`delete complete (${JSON.stringify(result.state)})`);
+    const result = (await next._repository.deleteOne(entity));
+    logger(`delete complete (${JSON.stringify(result.state)})`);
 
-      const entities = (await next._repository.get());
-      next.setNext('mark-complete', { entities });
-    }
+    const entities = (await next._repository.get());
+    next.setNext('mark-complete', { entities });
 
-    exec();
+    return entity;
   }
 }

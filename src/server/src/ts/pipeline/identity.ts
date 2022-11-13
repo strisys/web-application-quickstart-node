@@ -1,20 +1,11 @@
 import { Application, Request, Response, NextFunction } from 'express';
-import { IIdentityStateAuthenticated, getLogger } from 'model-server';
-import { tryExtractIdentity } from './oidc/azure/identity';
+import { getLogger } from '../shared/logging';
+import { tryExtractIdentity, IdentityData } from './oidc/identity';
 
 export type IdentityProvider = ('azure-ad');
-export type IdentityHandler = (req: Request) => Promise<IIdentityStateAuthenticated>;
+export type IdentityHandler = (req: Request) => Promise<IdentityData>;
 
 const logger = getLogger('pipeline:oidc:identity');
-
-declare global {
-  namespace Express {
-    interface Request {
-      profile: IIdentityStateAuthenticated;
-      accessToken: string
-    }
-  }
-}
 
 export const configure = (app: Application, idp: IdentityProvider): Application => {
   let handler: IdentityHandler = null;

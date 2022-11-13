@@ -7,7 +7,7 @@ import passport from 'passport';
 import httpStatus from 'http-status-codes';
 import { SecretStoreFactory } from 'model-server';
 import process from 'process';
-import { fetch, store, remove } from './oidc-profile-cache';
+import { fetch, store, remove, IdentityData } from './oidc-store';
 import { getLogger } from '../../../shared/logging';
 
 type AuthType = ('codeGrant' | 'bearer');
@@ -57,7 +57,7 @@ const findByOid = async (oid: any, fn: any): Promise<any> => {
 };
 
 passport.serializeUser((user: any, done: (err: any, id?: any) => void) => {
-  done(null, user.oid);
+  done(null, user.sub);
 });
 
 passport.deserializeUser(async (oid: any, done: any) => {
@@ -68,20 +68,28 @@ passport.deserializeUser(async (oid: any, done: any) => {
 
 //const verifyFn = (req: any, profile: any, done: any) => {
 const verifyFn = (req: any, iss: any, sub: any, profile: any, jwtClaims: any, access_token: any, refresh_token: any, params: any, done: any) => {
-  const oid = (profile && profile.oid);
-
-  if (!oid) {
-    return done(new Error(`No object id found.  The passport.js strategy configuration and/or scopes granted in Azure AD are invalid.  Check that the proper scopes [${requiredScopes}] have been specified and granted.`), null);
+  const identityData: IdentityData = {
+    sub,
+    profile,
+    claims: jwtClaims,
+    authentication: {
+      accessToken: (req['accessToken'] = access_token) as string,
+      refreshToken: refresh_token,
+      authorizationCode: req.body['code']
+    }
   }
 
-  findByOid(oid, (err: any, user: any) => {
+  if (!sub) {
+    return done(new Error(`No subjct (sub) found.  The passport.js strategy configuration and/or scopes granted in Azure AD are invalid.  Check that the proper scopes [${requiredScopes}] have been specified and granted.`), null);
+  }
+
+  findByOid(sub, (err: any, user: any) => {
     if (err) {
       return done(err);
     }
 
     if (!user) {
-      profile.accessToken = req['accessToken'] = access_token;
-      store(profile);
+      store(identityData);
       log(`The user profile has been cached successfully. [${profile.displayName}]`);
       return done(null, profile);
     }
@@ -209,11 +217,10 @@ export const configureCodeGrant = async (app: Application): Promise<Handler> => 
   const HOST_PORT = `${HOST_URL}:${PORT}`;
   const URL_FRONTEND = (config[AppConfigKey.FrontEndUrl] || HOST_PORT);
   const TENANT = config[AppConfigKey.AzureAdTenant];
+  const APP_ID = config[AppConfigKey.AzureAdClientId];
+  const APP_SECRET = config[AppConfigKey.AzureAdSecret];
 
   const getPassportConfig = (): any => {
-    const APP_ID = config[AppConfigKey.AzureAdClientId];
-    const APP_SECRET = config[AppConfigKey.AzureAdSecret];
-
     const isDefaultPort = ((!PORT) || (PORT === '80') || (PORT === 80) || (PORT === '0') || (PORT === 0));
     const redirectUrl = ((isDefaultPort) ? `${HOST_URL}/signin` : `${HOST_URL}:${PORT}/signin`);
     const destroySessionUrl = ((isDefaultPort) ? `${HOST_URL}` : `${HOST_URL}:${PORT}`);

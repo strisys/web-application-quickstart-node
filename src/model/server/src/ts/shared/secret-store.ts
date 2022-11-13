@@ -5,10 +5,12 @@ import { DefaultAzureCredential } from '@azure/identity';
 import { getLogger } from 'model-core';
 import path from 'path';
 
+type StringOrNull = (string | null);
+
 const logger = getLogger('secret-store');
 const KV_KEY = 'AZURE_KEY_VAULT_NAME';
 
-const tryLoadEnvironmentVariablesFromEnvFile = (filePath: string = null): boolean => {
+const tryLoadEnvironmentVariablesFromEnvFile = (filePath: StringOrNull = null): boolean => {
   // Attempt to get the configuration parameters from a .env file if working locally.
   let fullPath = (filePath || module.path);
 
@@ -17,14 +19,14 @@ const tryLoadEnvironmentVariablesFromEnvFile = (filePath: string = null): boolea
   }
 
   if (!fullPath.includes('.env')) {
-    fullPath = path.join(fullPath, '.env');
+    fullPath = path.resolve(fullPath, '../', '.env');
   }
 
   logger(`attempting to load environment variables from .env file [${fullPath}]...`);
 
   // https://github.com/motdotla/dotenv#options
-  const configResult = require('dotenv').config({ 
-    path: fullPath 
+  const configResult = require('dotenv').config({
+    path: fullPath
   });
 
   if (configResult.error) {
@@ -38,13 +40,13 @@ const tryLoadEnvironmentVariablesFromEnvFile = (filePath: string = null): boolea
 
 export interface ISecretStore {
   get(name: string): Promise<string>;
-  getMany(names: Array<string>): Promise<{ [key: string]: any }> ;
+  getMany(names: Array<string>): Promise<Record<string, any>>;
 }
 
 export type SecretStoreType = ('azure-key-vault');
 
 export class SecretStoreFactory {
-  public static get(type: SecretStoreType, vaultName: string = null): ISecretStore {
+  public static get(type: SecretStoreType, vaultName: StringOrNull = null): ISecretStore {
     if (type === 'azure-key-vault') {
       return (new SecretStore(vaultName));
     }
@@ -55,10 +57,10 @@ export class SecretStoreFactory {
 
 class SecretStore implements ISecretStore {
   private static _client: SecretClient;
-  private static _cache: { [key: string] : string} = {};
-  private _vaultName: string;
+  private static _cache: { [key: string]: string } = {};
+  private _vaultName: StringOrNull;
 
-  constructor(vaultName: string = null) {
+  constructor(vaultName: StringOrNull = null) {
     this._vaultName = (vaultName || null);
   }
 
@@ -73,15 +75,15 @@ class SecretStore implements ISecretStore {
 
     // The environment variable for AZURE-KEY-VAULT-NAME may be passed in
     // via or set in the .env file.  If its already set do not bother with env.
-    this._vaultName = process.env[KV_KEY];
+    this._vaultName = (process.env[KV_KEY] || null);
 
     if (!this._vaultName) {
       tryLoadEnvironmentVariablesFromEnvFile();
-      this._vaultName = process.env[KV_KEY];
+      this._vaultName = (process.env[KV_KEY] || null);
     }
 
     if ((!this._vaultName) || (this._vaultName === 'not-set')) {
-      throw new Error(`Failed to create Azure Key Vault client.  The ${KV_KEY} environment variable was not set.`);
+      throw new Error(`Failed to create Azure Key Vault client.  The '${KV_KEY}' environment variable was not set.`);
     }
 
     return this.toVaultUrl(this._vaultName);
@@ -103,27 +105,27 @@ class SecretStore implements ISecretStore {
 
       throw new Error(message);
     }
-  } 
+  }
 
   private getCachedValue(name: string): string {
     return (process.env[name] || SecretStore._cache[name]);
   }
 
   private async getStoredValue(name: string): Promise<string> {
-    return (SecretStore._cache[name] = (await (this.tryGetClient()).getSecret(name)).value);
+    return (SecretStore._cache[name] = ((await (this.tryGetClient()).getSecret(name)).value) || '');
   }
 
   public async get(name: string): Promise<string> {
     return (this.getCachedValue(name) || (await this.getStoredValue(name)));
   }
 
-  public async getMany(names: Array<string>): Promise<{ [key: string]: any }> {
+  public async getMany(names: Array<string>): Promise<Record<string, any>> {
     let values: { [key: string]: any } = {};
 
-    for(let x = 0; (x < names.length); x++) {
+    for (let x = 0; (x < names.length); x++) {
       values[names[x]] = (await this.get(names[x]));
     }
-    
+
     return values;
   }
 }

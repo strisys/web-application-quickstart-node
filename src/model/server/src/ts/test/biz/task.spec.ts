@@ -1,25 +1,40 @@
 import { expect } from 'chai';
-import { Task, TaskRepository, generateUuid } from '../../';
+import { Task, TaskRepositoryFactory, ITaskRepository, TaskRepositoryType, generateUuid } from '../../';
 import { getLogger } from '../util';
 
 const logger = getLogger(module);
+const DEFAULT_REPO_TYPE: TaskRepositoryType = 'sql-server';
+
+const getRepository = async (type: TaskRepositoryType = DEFAULT_REPO_TYPE): Promise<ITaskRepository> => {
+  return TaskRepositoryFactory.get(type);
+}
 
 describe('TaskRepository', () => {
-  const respository = new TaskRepository();
+  describe('get and getOne', function () {
+    this.timeout((1000 * 10));
 
-  describe('get', function () {
     it('should return more than 0 entities', async () => {
       // Assemble/Act
+      const respository = (await getRepository());
       const entities = (await respository.get());
 
       // Assert
       expect(entities.length).to.be.greaterThan(0);
+
+      // Assemble/Act
+      const entity = (await respository.getOne(entities[0].uuid));
+
+      // Assert
+      expect(entity).is.not.null;
+      expect(entity.isNull).is.false;
+      expect(entity.uuid).is.equal(entities[0].uuid);
     });
   });
 
   describe('post', function () {
     it('should post one entity', async () => {
       // Assemble
+      const respository = (await getRepository('in-memory'));
       const length = (await respository.get()).length;
       const entity = new Task();
       entity.description = generateUuid();
@@ -37,6 +52,7 @@ describe('TaskRepository', () => {
   describe('deleteOne', function () {
     it('should delete on 1 entity', async () => {
       // Assemble/Act
+      const respository = (await getRepository('in-memory'));
       const entities = (await respository.get());
 
       // Act
@@ -55,6 +71,7 @@ describe('TaskRepository', () => {
   describe('delete', function () {
     it('should delete on 1 entity', async () => {
       // Assemble/Act
+      const respository = (await getRepository('in-memory'));
       const entities: Task[] = (await respository.get());
 
       // Act

@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
-import { TaskRepository, Task, getLogger, ITaskState } from 'model-server';
+import { AuthorizationCodeCredential, OnBehalfOfCredential, DefaultAzureCredential } from '@azure/identity';
+import { TaskRepositoryFactory, Task, getLogger, ITaskState, toCredential } from 'model-server';
 
 const logger = getLogger('api:v1.0:task');
-const repository = new TaskRepository();
+const repository = TaskRepositoryFactory.get('in-memory');
 
 export class Controller {
   public async get(req: Request, res: Response): Promise<void> {
-    logger('recieved request for all entities ...')
+    logger(`recieved ${req.method} request for all entities ...`);
 
     const entities = await repository.get();
     const state = entities.map((e) => e.state);
@@ -28,7 +29,7 @@ export class Controller {
   }
 
   public async post(req: Request, res: Response): Promise<void> {
-    logger(`recieved ${req.method} request ...`);
+    logger(`recieved ${req.method} request (body: ${JSON.stringify(req.body)}) ...`);
     const states: Array<ITaskState> = req.body;
 
     if (!states) {

@@ -1,5 +1,5 @@
 export * from 'model-core';
-export * from './secret-store';
+export * from './shared/secret-store';
 
 export * from './auth/identity';
 export * from './biz/task';

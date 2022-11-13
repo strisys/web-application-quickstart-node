@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { ViewModel, Task, TransitionName, getLogger } from './ViewModel';
 import { CardListView } from './CardListView'
 
-const logger = getLogger('task-view-container');
+const logger = getLogger(`view-container`);
 
 const fabStyle = {
   position: 'absolute',
@@ -45,9 +45,9 @@ export function TasksViewContainer() {
   const [open, setOpen] = React.useState(true);
   const [entity, setEntity] = React.useState<Task>();
 
-  const onEvent = (eventName: TransitionName, data: any = null) => {
+  const onEvent = async (eventName: TransitionName, data: any = null): Promise<void> => {
     if (eventName === 'mark-complete') {
-      vm.markComplete(data as Task);
+      await vm.markComplete(data as Task);
     }
 
     if (eventName === 'add-task') {
@@ -55,7 +55,7 @@ export function TasksViewContainer() {
     }
   }
 
-  const onDialogClose = async (result: DialogResultValue, state?: Task): Promise<void> => {
+  const onEditDialogClose = async (result: DialogResultValue, state?: Task): Promise<void> => {
     if (result === 'submit') {
       await vm.post(state);
     }
@@ -82,7 +82,7 @@ export function TasksViewContainer() {
         <AddIcon  />
       </Fab>
       <Button sx={triggerButtonStyle} onClick={vm.tickle} aria-label={'debug render'}>{'debug render'}</Button>
-      <AddTaskFormDialog open={(entity != null)} entity={entity} onClose={onDialogClose} />
+      <AddTaskFormDialog open={(entity != null)} entity={entity} onClose={onEditDialogClose} />
     </>
   )
 }

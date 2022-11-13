@@ -7,10 +7,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import styled from '@emotion/styled';
-import { Task, getLogger, MODULE_NAME, setProperty } from './ViewModel';
+import { Task, getLogger, setProperty } from './ViewModel';
 export type DialogResultValue = ('submit' | 'close' | 'cancel');
 
-const logger = getLogger(`${MODULE_NAME}-task-dialog`);
+const logger = getLogger(`task-dialog`);
 
 interface DialogProps {
   open: boolean;

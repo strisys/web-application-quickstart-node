@@ -5,9 +5,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Task, TransitionName, getLogger, MODULE_NAME } from './ViewModel';
+import Grow from '@mui/material/Grow';
+import { CenteredVerticalFlexGrid } from '../../shared/layout/flex';
+import { Task, TransitionName, getLogger } from './ViewModel';
 
-const logger = getLogger(`${MODULE_NAME}-task-care-listview`);
+const logger = getLogger(`task-card-listview`);
 
 type CardViewProps = { 
   entity: Task, 
@@ -40,19 +42,28 @@ type CardListViewProps = {
 }
 
 export function CardListView({ entities, onEvent }: CardListViewProps) { 
-  let content = [<Typography variant='h5' component='div'>{'Tasks completed!'}</Typography>];
+  const hasCards = ((entities || []).length > 0);
 
-  if ((entities || []).length > 0) {
-    content = entities.map((entity) => {
+  if (hasCards) {
+    const content = entities.map((entity) => {
       return <CardView key={entity.uuid} entity={entity} onEvent={onEvent} />
     });
+
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={5}>
+          {content}
+        </Grid>
+      </Box>
+    );
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={5}>
-        {content}
-      </Grid>
-    </Box>
-  );
+    <Grow in={true} timeout={1000}>
+      <CenteredVerticalFlexGrid>
+        <Typography variant='h5' component='div'>{'Tasks completed!'}</Typography>
+      </CenteredVerticalFlexGrid>
+    </Grow>
+    
+  )
 }

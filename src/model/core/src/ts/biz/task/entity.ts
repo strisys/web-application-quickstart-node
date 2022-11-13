@@ -7,15 +7,15 @@ export interface ITaskState extends IIdentity, IPeristentStoreSync {
   tags: (KV | null);
 }
 
-type StateOrNull = (ITaskState | null);
-type From<T> = (T extends Array<ITaskState> ? Array<Task> : Task);
+export type TaskStateOrNull = (ITaskState | null);
+export type From<T> = (T extends Array<ITaskState> ? Array<Task> : Task);
 
 export class Task implements IPersistedEntity {
   private static _null: Task;
   private static _emptyState: Readonly<ITaskState>;
   private readonly _state: ITaskState;
 
-  constructor(state: StateOrNull = null) {
+  constructor(state: TaskStateOrNull = null) {
     this._state = Task.coerce(state);
   }
 
@@ -78,7 +78,7 @@ export class Task implements IPersistedEntity {
     })));
   }
 
-  public static coerce(source: StateOrNull): ITaskState {
+  public static coerce(source: TaskStateOrNull): ITaskState {
     const emp = Task.emptyState;
     const val = (source || emp);
 
