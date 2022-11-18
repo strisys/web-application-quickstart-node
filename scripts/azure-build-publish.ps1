@@ -1,7 +1,7 @@
 az --version
 az account show --output table
 
-$Env:version = '0.0.13'
+$Env:version = '0.0.14'
 $organization_name = 'strisys'
 $resource_group_name = 'rg-web-application-quickstart'
 $web_app_name = 'webapplicationquickstart'
