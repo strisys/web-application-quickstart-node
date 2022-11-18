@@ -1,13 +1,13 @@
 az --version
 az account show --output table
 
-$Env:version = '0.0.14'
+$Env:version = '0.0.15'
 $organization_name = 'strisys'
 $resource_group_name = 'rg-web-application-quickstart'
 $web_app_name = 'webapplicationquickstart'
 $app_code_name = 'webapplicationquickstart'
 $registry_name = 'cr' + $app_code_name
-$registry_name_full = 'acr' + $app_code_name + '.azurecr.io'
+$registry_name_full = $registry_name + '.azurecr.io'
 $repository_name = $organization_name + '/' + $app_code_name
 $image_name = $repository_name + ':v' + $Env:version
 $image_name_latest = $repository_name + ':latest'
