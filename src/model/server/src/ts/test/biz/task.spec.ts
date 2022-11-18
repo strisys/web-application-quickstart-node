@@ -3,7 +3,7 @@ import { Task, TaskRepositoryFactory, ITaskRepository, TaskRepositoryType, gener
 import { getLogger } from '../util';
 
 const logger = getLogger(module);
-const DEFAULT_REPO_TYPE: TaskRepositoryType = 'sql-server';
+const DEFAULT_REPO_TYPE: TaskRepositoryType = 'in-memory';
 
 const getRepository = async (type: TaskRepositoryType = DEFAULT_REPO_TYPE): Promise<ITaskRepository> => {
   return TaskRepositoryFactory.get(type);
