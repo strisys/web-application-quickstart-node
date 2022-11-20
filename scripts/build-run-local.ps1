@@ -1,3 +1,5 @@
+$PSVersionTable
+
 $subscription = "<put subscription id here>"
 $outputFilePath = ".\accountlist.txt"
 $line = '======================================================================================'

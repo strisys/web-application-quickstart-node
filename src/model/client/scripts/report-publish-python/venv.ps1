@@ -8,7 +8,6 @@ Start-Process -FilePath '.\.venv\Scripts\activate.bat' -NoNewWindow
 
 Write-Host "Creating a requirements.txt and main.py file ..."
 Out-File ".\main.py" -Encoding utf8
-pip freeze > requirements.txt
 
 Write-Host "Opening VSCode ..."
 code .

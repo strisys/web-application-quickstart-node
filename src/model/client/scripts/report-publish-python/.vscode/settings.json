@@ -1,0 +1,7 @@
+{
+  "files.exclude": {
+    "**/*.ps1": true,
+    "**/docs": true,
+    "**/ReadMe.md": true
+  }
+}
