@@ -53,7 +53,7 @@ export class PipelineService {
       app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
       app.use(flash());
       configureHealth(app);
-      await configureOidc(app);
+      // await configureOidc(app);
       configureIdentity(app, 'azure-ad');
       setApiRoutes(app);
       app.use(staticfile);
