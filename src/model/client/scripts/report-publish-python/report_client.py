@@ -36,7 +36,8 @@ def publish(environment, reportName, json, version='0.0.0.0', credential=Default
     response = requests.post(url, data=json, headers=headers)
 
     if response.ok:
-        print(response.json())
+        print('successfully published report data. (report:={0})'.format(
+            response.json()))
         return
 
-    print('failure')
+    print('report publication failed')
