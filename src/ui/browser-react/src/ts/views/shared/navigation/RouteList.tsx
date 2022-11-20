@@ -1,10 +1,12 @@
 import ManageSearchTwoToneIcon from '@mui/icons-material/ManageSearchTwoTone';
 import PlaylistAddCheckTwoToneIcon from '@mui/icons-material/PlaylistAddCheckTwoTone';
 import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
+import QueryStatsSharpIcon from '@mui/icons-material/QueryStatsSharp';
 
 import { SearchViewContainer } from '../../features/search/ViewContainer';
 import { TasksViewContainer } from '../../features/task-management/ViewContainer';
 import { SalesEntryContainer } from '../../features/sales-report/ViewContainer';
+import { DataViewerViewContainer } from '../../features/data-viewer/ViewContainer';
 import { FourOFourViewContainer } from '../../features/404/ViewContainer';
 
 export class MenuItem {
@@ -17,6 +19,7 @@ export const routeList: MenuItem[] = [
   // new MenuItem('search', 'Search', '/search', <SearchViewContainer />, <ManageSearchTwoToneIcon />),
   new MenuItem('tasks', 'Tasks', '/tasks', <TasksViewContainer />, <PlaylistAddCheckTwoToneIcon />),
   new MenuItem('sales', 'Sales', '/sales', <SalesEntryContainer />, <MonetizationOnTwoToneIcon />),
+  new MenuItem('data-viewer', 'DataViewer', '/data-viewer', <DataViewerViewContainer />, <QueryStatsSharpIcon />),
   new MenuItem('404', '404', '*', <FourOFourViewContainer />, null, false),
 ];
 

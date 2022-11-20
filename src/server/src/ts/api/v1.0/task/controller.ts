@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status-codes';
-import { AuthorizationCodeCredential, OnBehalfOfCredential, DefaultAzureCredential } from '@azure/identity';
-import { TaskRepositoryFactory, Task, getLogger, ITaskState, toCredential } from 'model-server';
+import { TaskRepositoryFactory, Task, getLogger, ITaskState } from 'model-server';
 
 const logger = getLogger('api:v1.0:task');
 const repository = TaskRepositoryFactory.get('in-memory');

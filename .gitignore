@@ -2,6 +2,8 @@
 js/
 *.cid
 .subscription
+.venv/
+__pycache__/
 
 # Logs
 logs

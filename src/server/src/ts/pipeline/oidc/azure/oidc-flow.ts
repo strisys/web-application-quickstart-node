@@ -52,8 +52,8 @@ const getConfigValues = async (): Promise<Record<string, any>> => {
   return (await (SecretStoreFactory.get('azure-key-vault').getMany(keys)));
 }
 
-const findByOid = async (oid: any, fn: any): Promise<any> => {
-  return fn(null, (await fetch(oid)));
+const findByOid = async (sub: any, fn: any): Promise<any> => {
+  return fn(null, (await fetch(sub)));
 };
 
 passport.serializeUser((user: any, done: (err: any, id?: any) => void) => {
@@ -168,18 +168,25 @@ export const configureBearer = async (app: Application): Promise<Handler> => {
     validateIssuer: false,
     issuer: `https://sts.windows.net/${TENANT}/`,
     isB2C: false,
-    loggingLevel: 'info',
+    loggingLevel: 'warn',
     loggingNoPII: false,
     clockSkew: 300
   };
 
   const strategy: passport.Strategy = new BearerStrategy(options, async (request: Request, user: any, done) => {
-    if (user) {
-      user.accessToken = tryGetBearerToken(request);
-      await store(user);
+    const identityData: IdentityData = {
+      sub: user.sub,
+      profile: user,
+      claims: user,
+      authentication: {
+        accessToken: tryGetBearerToken(request),
+        refreshToken: '',
+        authorizationCode: ''
+      }
     }
 
-    done(null, user);
+    await store(identityData);
+    done(null, identityData);
   });
 
   passport.use(strategy);

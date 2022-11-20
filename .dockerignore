@@ -27,3 +27,5 @@ LICENSE
 README.md
 **/.git
 **/.gitignore
+**/.venv
+**/__pycache__

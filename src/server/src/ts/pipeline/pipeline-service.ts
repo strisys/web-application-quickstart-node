@@ -46,9 +46,9 @@ export class PipelineService {
     try {
       app.use(morgan(morganFormat));
       configureDebug(app);
-      app.use(bodyParser.text({ limit: '99mb' }));
-      app.use(bodyParser.json({ limit: '99mb' }));
-      app.use(bodyParser.urlencoded({ extended: false }));
+      app.use(bodyParser.text({ limit: '999mb' }));
+      app.use(bodyParser.json({ limit: '999mb' }));
+      app.use(bodyParser.urlencoded({ limit: '999mb', extended: false, parameterLimit: 100000, }));
       app.use(cookieParser());
       app.use(session({ resave: true, saveUninitialized: true, secret: SESSION_SECRET }));
       app.use(flash());

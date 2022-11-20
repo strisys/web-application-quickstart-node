@@ -4,4 +4,4 @@ export const getApiPath = (subpath: ApiEndpointPath): string => {
   return `${baseApiUrl}/${subpath}`;
 }
 
-export type ApiEndpointPath = ('tasks' | 'query/sales');
+export type ApiEndpointPath = ('tasks' | 'query/sales' | 'query/data-viewer');
