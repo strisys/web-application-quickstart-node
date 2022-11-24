@@ -1,5 +1,5 @@
-FROM acrwebapplicationquickstart.azurecr.io/strisys/web-application-quickstart
-LABEL name="web-application-quickstart"
+FROM strisys/webapplicationquickstart
+LABEL name="web-application-quickstart-debug"
 LABEL maintaner="webapplicationquickstart@strisys.com"
 
 # update apk
@@ -20,4 +20,4 @@ RUN apk add gcc musl-dev python3-dev libffi-dev openssl-dev cargo make
 RUN pip install azure-cli
 
 WORKDIR /app/server
-CMD ["npm", "start"]
+CMD ["/bin/sh"]
