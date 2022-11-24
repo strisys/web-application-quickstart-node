@@ -1,12 +1,12 @@
 # Full Stack Web Application Quickstart using DDD (Node version)
 
-[![Build Status](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_apis/build/status/strisys.web-application-quickstart-node?branchName=main)](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_build/latest?definitionId=8&branchName=main)
+---
 
-### Overview
+## Overview
 
 This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Node.js](https://nodejs.org), [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/), [React](https://reactjs.org/)), that can be used to start a new project or simply to anchor a discussion.  There is [supplemental documentation](./docs/azure) on how to deploy this to Azure using offerings such as [Azure Web App for Containers](https://learn.microsoft.com/en-gb/training/modules/deploy-run-container-app-service/), [Azure Container Registry](https://azure.microsoft.com/en-us/products/container-registry/#overview), and [Azure AD](https://learn.microsoft.com/en-ca/azure/active-directory/fundamentals/) as an identity provider for authentication . 
 
-#### DDD
+## Architecture
 
 At a high-level, the major components of this architecture are simply as follows.
 
@@ -22,15 +22,15 @@ This architecture is [domain-driven](https://en.wikipedia.org/wiki/Domain-driven
 
 Some benefits, among many, of this approach are as follows:
 
-1. **Reuse** - Code, specifically [model.core](./src/model/core/src), allowed to be used by any other module.  What is somewhat unique is the ability to run the same business logic in the [user-agent](./src/ui) and on the [server (Node.js)](./src/server).  A calculation, for example, can be done on either the browser or server when both have the same [model/core code](./src/model/core/src) and data without the need for either to talk to each other.
+1. **Reuse** - Code, specifically [model.core](./src/model/core/src), allowed to be used by any other module.  What is emphasized in this setup is the ability to run the same business logic code in the [user-agent](./src/ui) and on the [server (Node.js)](./src/server).  A calculation, for example, can be done on either side when both have the same [model/core code](./src/model/core/src) and data without the need for either to talk to each other.
 2. **Testability** - The first calling client to logic isolated to the model set of projects is a test suite like [Mocha](https://mochajs.org/).  There should be no need to run the application to assert on the correctness of the modules or to have to account for a framework in the way when testing.  
 
-### Tooling
+## Tooling
 
 - [Node v16.13.1](https://nodejs.org/download/release/v16.13.2)
 - PowerShell v5.1 - The [execution policy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2#managing-the-execution-policy-with-powershell) should be [set](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2) to **RemoteSigned** for the current user scope
 
-### To Install & Run
+## Installation
 
 On Windows:
 
@@ -41,3 +41,8 @@ On Windows:
 ```
 
 See the [docs](./docs/azure) for running on containers in combination with Azure.
+
+## Workflow
+
+Its necessary to mention a word about workflow within VS Code as switching between projects will be an frequent occurrence.  The recommended extension for this purpose is [Project Manager](https://marketplace.visualstudio.com/items?itemName=alefragnani.project-manager).  Please refer to its documentation for configuration.
+

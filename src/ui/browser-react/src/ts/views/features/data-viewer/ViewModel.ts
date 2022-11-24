@@ -4,7 +4,7 @@ import { ReportEntryRepository, ReportEntry, IReportEntryBaseState, setProperty,
 export { ReportEntry, setProperty, isBrowser };
 
 export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'processing');
-export const MODULE_NAME = 'task-management';
+export const MODULE_NAME = 'data-viewer';
 
 export const getLogger = (componentName: string) => {
   return createLogger(`${componentName}-viewmodel`)
