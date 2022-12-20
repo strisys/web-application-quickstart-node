@@ -30,31 +30,26 @@ function Write-Section($params) {
     Write-Host($line) 
 }
 
+function Set-Package($name, $path) {
+    Write-section $name
+    Set-Location $path
+
+    $nm_folder = '.\node_modules'
+
+    if (Test-Path $nm_folder) {
+        Remove-Item -Path $nm_folder -Recurse -Force
+    }
+
+    npm install  
+}
+
 function Invoke-NpmInstall {
-    # model core
-    Write-Section('model.core')
-    Set-Location ..\src\model\core
-    npm install
+    Set-Package 'model.core' '..\src\model\core'
+    Set-Package 'model.server' '..\server'
+    Set-Package 'model.client' '..\client'
+    Set-Package 'server' '..\..\server'
+    Set-Package 'ui' '..\ui\browser-react'
 
-    # model server
-    Write-Section('model.server')
-    Set-Location ..\server
-    npm install
-
-    # model client
-    Write-Section('model.client')
-    Set-Location ..\client
-    npm install
-
-    # server
-    Write-Section('server')
-    Set-Location ..\..\server
-    npm install
-
-    # ui browser-react
-    Write-Section('browser-react')
-    Set-Location ..\ui\browser-react
-    npm install
     npm run start
 
     Set-Location ..\..\..\
