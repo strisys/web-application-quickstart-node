@@ -42,12 +42,13 @@ function Set-Package($name, $path) {
     }
 
     Write-Host "installing packages ..."
-    $result = (Start-Process -FilePath "npm" -Args "install" -PassThru -Wait -NoNewWindow)    
+    $result = (Start-Process -FilePath "npm" -Args "install" -PassThru -Wait -NoNewWindow).ExitCode    
 
-    if ($result.ExitCode -ne 0) {
-        $err = "The 'npm install' command to build '$name' failed (error code: $result.ExitCode).  See logs for details"
+    if ($result -ne 0) {
+        $err = "The 'npm install' command to build '$name' failed (error code: $result).  See logs for details"
         Write-Error $err
-        # throw $err
+        pause 
+        throw $err
     }
 }
 
