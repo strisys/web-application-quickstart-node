@@ -34,13 +34,21 @@ function Set-Package($name, $path) {
     Write-section $name
     Set-Location $path
 
-    $nm_folder = '.\node_modules'
+    $nm_path = '.\node_modules'
 
-    if (Test-Path $nm_folder) {
-        Remove-Item -Path $nm_folder -Recurse -Force
+    if (Test-Path $nm_path) {
+        Write-Host "removing previously installed packages ..."
+        Remove-Item -Path .\node_modules -Recurse -Force  
     }
 
-    npm install  
+    Write-Host "installing packages ..."
+    $result = (Start-Process -FilePath "npm" -Args "install" -PassThru -Wait -NoNewWindow)    
+
+    if ($result.ExitCode -ne 0) {
+        $err = "The 'npm install' command to build '$name' failed (error code: $result.ExitCode).  See logs for details"
+        Write-Error $err
+        # throw $err
+    }
 }
 
 function Invoke-NpmInstall {
