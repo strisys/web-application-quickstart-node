@@ -1,6 +1,6 @@
 {
   "name": "model-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sample server model with data sourced from a relational or document database",
   "main": "./src/js/index.js",
   "types": "./src/js/index.d.ts",
@@ -20,7 +20,7 @@
   "author": "Stephen Trudel",
   "license": "ISC",
   "engines": {
-    "node": "<=18.4.0"
+    "node": "<=18.12.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
