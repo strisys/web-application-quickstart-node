@@ -27,7 +27,7 @@ Some benefits, among many, of this approach are as follows:
 
 ## Tooling
 
-- [Node v16.13.1](https://nodejs.org/download/release/v16.13.2)
+- [Node v18.12.1](https://nodejs.org/download/release/v18.12.1)
 - PowerShell v5.1 - The [execution policy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2#managing-the-execution-policy-with-powershell) should be [set](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2) to **RemoteSigned** for the current user scope
 
 ## Installation
