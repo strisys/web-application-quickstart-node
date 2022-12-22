@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { SecretClient } from '@azure/keyvault-secrets';
-import { DefaultAzureCredential } from '@azure/identity';
+import { TokenCredential, ChainedTokenCredential, AzureCliCredential, ManagedIdentityCredential } from '@azure/identity';
 import { getLogger } from 'model-core';
 import path from 'path';
 
@@ -89,6 +89,10 @@ class SecretStore implements ISecretStore {
     return this.toVaultUrl(this._vaultName);
   }
 
+  private get tokenCredential(): TokenCredential {
+    return (new ChainedTokenCredential(new AzureCliCredential(), new ManagedIdentityCredential()));
+  }
+
   private tryGetClient(): SecretClient {
     if (SecretStore._client) {
       return SecretStore._client;
@@ -97,7 +101,10 @@ class SecretStore implements ISecretStore {
     try {
       const url = this.tryGetKeyVaultUrl();
       logger(`creating Azure key vault client (${url}) ...`);
-      return (SecretStore._client = new SecretClient(url, new DefaultAzureCredential()));
+      SecretStore._client = new SecretClient(url, this.tokenCredential);
+      logger(`Azure key vault client (${url}) created succesfully!`);
+
+      return SecretStore._client;
     }
     catch (err) {
       const message = `Failed to create Azure Key Vault client. Could not create secret client. ${err}`;
