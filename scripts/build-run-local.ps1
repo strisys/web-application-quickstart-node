@@ -36,11 +36,11 @@ function Set-Package($name, $path) {
     Write-section $name
     Set-Location $path
 
-    $nm_path = '.\node_modules'
+    $nm_path = './node_modules'
 
     if (Test-Path $nm_path) {
         Write-Host "removing previously installed packages ..."
-        Remove-Item -Path .\node_modules -Recurse -Force  
+        Remove-Item -Path ./node_modules -Recurse -Force  
     }
 
     Write-Host "installing packages ..."
