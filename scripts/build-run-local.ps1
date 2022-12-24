@@ -1,3 +1,5 @@
+#Requires -Version 7.0
+
 $PSVersionTable
 
 $subscription = "<put subscription id here>"
@@ -53,15 +55,15 @@ function Set-Package($name, $path) {
 }
 
 function Invoke-NpmInstall {
-    Set-Package 'model.core' '..\src\model\core'
-    Set-Package 'model.server' '..\server'
-    Set-Package 'model.client' '..\client'
-    Set-Package 'server' '..\..\server'
-    Set-Package 'ui' '..\ui\browser-react'
+    Set-Package 'model.core' '../src/model/core'
+    Set-Package 'model.server' '../server'
+    Set-Package 'model.client' '../client'
+    Set-Package 'server' '../../server'
+    Set-Package 'ui' '../ui/browser-react'
 
     npm run start
 
-    Set-Location ..\..\..\
+    Set-Location ../../../
 }
 
 # Invoke-LoginAzure

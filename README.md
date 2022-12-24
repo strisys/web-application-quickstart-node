@@ -34,8 +34,6 @@ Some benefits, among many, of this approach are as follows:
 
 ## Installation
 
-On Windows:
-
 ```bash
 > git clone https://github.com/strisys/web-application-quickstart-node.git
 > cd web-application-quickstart-node/scripts
