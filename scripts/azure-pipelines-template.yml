@@ -1,5 +1,5 @@
 parameters:
-  app_code_name: web-application-quickstart
+  app_code_name: webapplicationquickstart
 
 steps:
 - checkout: self

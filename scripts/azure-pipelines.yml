@@ -8,4 +8,4 @@ jobs:
     steps:
     - template: ./azure-pipelines-template.yml
       parameters: 
-        app_code_name: web-application-quickstart
+        app_code_name: webapplicationquickstart
