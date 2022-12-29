@@ -1,0 +1,14 @@
+parameters:
+  app_code_name: web-application-quickstart
+
+steps:
+- checkout: self
+  persistCredentials: true
+- task: AzureCLI@2
+  displayName: Build and Publish Image to Azure Container Registry
+  inputs:
+    azureSubscription: strisys-devops-web-application-quickstart
+    workingDirectory: ./scripts
+    scriptType: pscore
+    scriptLocation: inlineScript
+    inlineScript: './azure-build-publish-ci.ps1 ${{ parameters.app_code_name }}'
