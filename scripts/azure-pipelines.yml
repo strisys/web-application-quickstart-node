@@ -1,11 +1,13 @@
 trigger:
 - deploy
 
-jobs:
-  - job: 'Ubuntu-build'
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - template: ./azure-pipelines-template.yml
-      parameters: 
-        app_code_name: webapplicationquickstart
+stages:
+  - stage: RunBuildPublishScript
+    jobs:
+      - job: RunBuildPublishScript
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+        - template: ./azure-pipelines-template.yml
+          parameters: 
+            app_code_name: webapplicationquickstart
