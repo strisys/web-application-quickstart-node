@@ -13,7 +13,7 @@
     "run-browser": "start http://localhost:3000/api/v1.0/query/sales",
     "run-server-dev": "start node ./src/js/index.js",
     "run-server": "node ./src/js/index.js",
-    "mocha": "mocha --exit --reporter tap ./src/js/test/**/*.spec.js",
+    "mocha": "mocha --exit --reporter tap \"./src/js/test/**/*.spec.js\"",
     "postinstall": "npm-run-all test",
     "test": "npm-run-all transpile mocha",
     "start-dev": "npm-run-all transpile run-server-dev",
