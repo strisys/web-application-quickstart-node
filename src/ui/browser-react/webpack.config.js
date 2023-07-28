@@ -11,9 +11,11 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 const WebpackBar = require('webpackbar');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerNotifierWebpackPlugin = require('fork-ts-checker-notifier-webpack-plugin');
 
 // App Info
-const appTile = "Web App QuickStart";
+const appTile = "WebApplicationQuickStart";
 
 // Version
 const packagejson = require('./package.json');
@@ -44,7 +46,7 @@ const getPaths = (argv) => {
   paths.build = path.resolve(paths.base, `${targetBuildPath}`);
   paths.buildjs = path.resolve(paths.base, (paths.build + '/js'));
   paths.src = path.resolve(paths.base, 'src/ts');
-  paths.entryPoint = getPath(paths, 'src', 'index.tsx');
+  paths.entryPoint = getPath(paths, 'src', 'Index.tsx');
   paths.public = (paths.src + '/views/static');
 
   return paths;
@@ -57,6 +59,7 @@ const getConfig = (isProd) => {
     name: 'development',
     mode: 'development',
     target: ['browserslist'],
+    cache: true,
     bail: false,
     entry: {
       main: paths.entryPoint
@@ -68,14 +71,15 @@ const getConfig = (isProd) => {
       publicPath: '/js/',
     },
     optimization: {
+      runtimeChunk: true,
       splitChunks: {
         chunks: 'all',
       },
     },
     watchOptions: {
-      aggregateTimeout: 200,
-      poll: 1500,
-      ignored: /node_modules/,
+      aggregateTimeout: 5000,
+      poll: 5000,
+      ignored: ['**/src/js', '**/node_modules', '**/build'],
     },
     devtool: 'source-map',
     module: {
@@ -83,8 +87,14 @@ const getConfig = (isProd) => {
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use:
-            'ts-loader'
+          use: [
+            {
+              loader: 'ts-loader',
+              options: {
+                transpileOnly: false,
+              },
+            },
+          ]
         },
         {
           test: /\.css$/,
@@ -106,6 +116,11 @@ const getConfig = (isProd) => {
       }
     },
     plugins: [
+      new ForkTsCheckerWebpackPlugin(),
+      new ForkTsCheckerNotifierWebpackPlugin({
+        title: 'TypeScript',
+        excludeWarnings: false,
+      }),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         APP_VERSION: version,
@@ -176,11 +191,10 @@ module.exports = (_, argv) => {
   const config = getConfig(argv);
 
   if (isWindows()) {
-    config.plugins.push(new WebpackBar());
-  }
-
-  if (tryParseBoolean(argv, 'analyze')) {
-    config.plugins.push(new BundleAnalyzerPlugin());
+    config.plugins.push(new WebpackBar({
+      color: 'orange',
+      reporters: ['fancy']
+    }));
   }
 
   if (tryParseBoolean(argv, 'analyze')) {

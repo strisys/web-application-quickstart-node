@@ -45,8 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "engines": { 
-    "node" : ">=16.13.1"
+  "engines": {
+    "node": ">=16.13.1"
   },
   "dependencies": {
     "@emotion/react": "~11.10.4",
@@ -66,7 +66,7 @@
     "web-vitals": "~3.0.3"
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.4.0",
+    "@svgr/webpack": "^8.0.1",
     "@types/node": "^18.8.2",
     "@types/react": "~18.0.21",
     "@types/react-dom": "~18.0.6",
@@ -74,20 +74,22 @@
     "buffer": "^6.0.3",
     "concurrently": "^7.4.0",
     "copyfiles": "^2.4.1",
-    "css-loader": "^6.7.1",
+    "css-loader": "^6.8.1",
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
-    "html-webpack-plugin": "^5.5.0",
+    "fork-ts-checker-notifier-webpack-plugin": "^7.0.0",
+    "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "html-webpack-plugin": "^5.5.3",
     "npm-run-all": "^4.1.5",
     "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "stream-browserify": "^3.0.0",
-    "style-loader": "^3.3.1",
-    "ts-loader": "^9.4.1",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
     "url-loader": "^4.1.1",
-    "webpack": "^5.74.0",
-    "webpack-bundle-analyzer": "^4.6.1",
-    "webpack-cli": "^4.10.0",
-    "webpack-merge": "^5.8.0",
+    "webpack": "^5.88.2",
+    "webpack-bundle-analyzer": "^4.9.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^5.9.0",
     "webpackbar": "^5.0.2"
   }
 }
