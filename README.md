@@ -29,7 +29,7 @@ Some benefits, among many, of this approach are as follows:
 
 ## Tooling
 
-- [Node v18.12.1](https://nodejs.org/download/release/v18.12.1) - Its recommended to use Node Version Manager ([Windows](https://github.com/coreybutler/nvm-windows/releases), [Linux](https://github.com/nvm-sh/nvm#install--update-script))
+- [Node v18.16.1](https://nodejs.org/download/release/v18.16.1) - Its recommended to use Node Version Manager ([Windows](https://github.com/coreybutler/nvm-windows/releases), [Linux](https://github.com/nvm-sh/nvm#install--update-script))
 - [PowerShell Core v7.3](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.3) - The [execution policy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2#managing-the-execution-policy-with-powershell) should be [set](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2) to **RemoteSigned** for the current user scope ([Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.3#installing-the-msi-package), [Linux](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.3))
 
 ## Installation
