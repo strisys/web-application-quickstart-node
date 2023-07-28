@@ -13,7 +13,7 @@ schedules:
   displayName: 'daily'
   branches:
     include:
-    - master
+    - main
   always: true
 
 name: 0.0.$(Build.BuildId)
