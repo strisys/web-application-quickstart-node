@@ -1,0 +1,33 @@
+stages:
+- stage: Build_Stage
+  displayName: WebApplication QuickStart
+  jobs:
+    - job:
+      displayName: Build Image
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+      - checkout: self
+        persistCredentials: true
+      - task: PowerShell@2
+        displayName: Replace Build Number
+        inputs:
+          targetType: 'filePath'
+          arguments: > 
+            -BuildName: $(Build.BuildNumber)
+            -WorkingDirectory: $(System.DefaultWorkingDirectory)
+          filePath: './scripts/version-replace.ps1'
+          failOnStderr: true
+          showWarnings: true
+          pwsh: true
+      - task: AzureCLI@2
+        displayName: Build OCI Image
+        inputs:
+          azureSubscription: sp-sprinklake-devops
+          scriptType: pscore
+          workingDirectory: './scripts'
+          scriptLocation: 'inlineScript'
+          arguments: '$(Build.BuildNumber)'
+          inlineScript: './azure-build-publish-ci.ps1 $(Build.BuildNumber)'
+          addSpnToEnvironment: true
+          failOnStandardError: false

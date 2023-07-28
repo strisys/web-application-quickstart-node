@@ -1,0 +1,14 @@
+trigger:
+  branches:
+    include:
+    - deploy
+  paths:
+    exclude:
+    - docs/*
+    - scripts/*
+    - ReadMe.md
+
+name: 0.0.$(Build.BuildId)
+
+stages:
+  - template: azure-pipelines-build-template.yml

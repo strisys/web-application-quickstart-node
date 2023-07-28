@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - docs/*
+    - scripts/*
+    - ReadMe.md
+    
+schedules:
+- cron: '0 20 * * *'
+  displayName: 'daily'
+  branches:
+    include:
+    - master
+  always: true
+
+name: 0.0.$(Build.BuildId)
+
+stages:
+  - template: azure-pipelines-build-template.yml
