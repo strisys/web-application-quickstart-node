@@ -23,7 +23,7 @@ stages:
       - task: AzureCLI@2
         displayName: Build OCI Image
         inputs:
-          azureSubscription: sp-sprinklake-devops
+          azureSubscription: strisys-devops-web-application-quickstart
           scriptType: pscore
           workingDirectory: './scripts'
           scriptLocation: 'inlineScript'
