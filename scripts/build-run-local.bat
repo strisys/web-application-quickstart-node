@@ -1,0 +1,1 @@
+pwsh ./build-run-local.ps1
