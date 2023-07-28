@@ -1,6 +1,6 @@
 {
   "name": "server-api",
-  "version": "0.0.0-beta-0",
+  "version": "0.0.0",
   "description": "Sample server API application",
   "main": "./src/js/index.ts",
   "types": "./src/js/index.d.ts",
