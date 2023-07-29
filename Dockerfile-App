@@ -10,10 +10,10 @@ RUN echo 'running build script ...' >> /build-log.txt
 WORKDIR ./model/core
 RUN npm install
 
-WORKDIR ../client
+WORKDIR ../server
 RUN npm install
 
-WORKDIR ../server
+WORKDIR ../client
 RUN npm install
 
 WORKDIR ../../server
