@@ -4,7 +4,7 @@
 
 [![Build Status](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_apis/build/status/strisys.web-application-quickstart-node?branchName=deploy)](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_build/latest?definitionId=8&branchName=deploy)
 
-## Overview
+## Overview ([demo](https://webapplicationquickstart.azurewebsites.net/))
 
 This is a working, [DDD-inspired](https://en.wikipedia.org/wiki/Domain-driven_design) web application sample configuration, written in [TypeScript](https://www.typescriptlang.org/) using common packages (e.g [Node.js](https://nodejs.org), [Express.js](http://expressjs.com/), [Mocha](https://mochajs.org/), [React](https://reactjs.org/)), that can be used to start a new project or simply to anchor a discussion.  There is [supplemental documentation](./docs/azure) on how to deploy this to Azure using offerings such as [Azure Web App for Containers](https://learn.microsoft.com/en-gb/training/modules/deploy-run-container-app-service/), [Azure Container Registry](https://azure.microsoft.com/en-us/products/container-registry/#overview), and [Azure AD](https://learn.microsoft.com/en-ca/azure/active-directory/fundamentals/) as an identity provider for authentication . 
 
