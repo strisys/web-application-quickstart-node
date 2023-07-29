@@ -2,7 +2,7 @@
 
 ---
 
-[![Build Status](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_apis/build/status/strisys.web-application-quickstart-node?branchName=deploy)](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_build/latest?definitionId=8&branchName=deploy)
+[![Build Status](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_apis/build/status%2FBuild%20%26%20Deploy?branchName=deploy)](https://dev.azure.com/strisys-devops/web-application-quickstart-node/_build/latest?definitionId=8&branchName=deploy)
 
 ## Overview ([demo](https://webapplicationquickstart.azurewebsites.net/))
 
