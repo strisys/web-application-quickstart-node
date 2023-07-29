@@ -20,4 +20,4 @@ $image_name_full = $registry_name_full + '/' + $image_name
 Write-Host("`nusing 'az acr build' to build and push image ($image_name) to registry ($registry_name_full) repository ($repository_name) ...")
 az acr build --registry $registry_name --image $image_name --file ../Dockerfile-App ../ --platform linux 
 az acr import -n $registry_name --source $image_name_full -t $image_name_latest --force
-az webapp restart --name $web_app_name --resource-group $resource_group_name --slot development
+az webapp restart --name $web_app_name --resource-group $resource_group_name 
