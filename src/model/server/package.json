@@ -21,7 +21,7 @@
   "author": "Stephen Trudel",
   "license": "ISC",
   "engines": {
-    "node": ">=18.12.1"
+    "node": "<=18.16.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
