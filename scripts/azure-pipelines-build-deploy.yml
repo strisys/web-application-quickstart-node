@@ -6,7 +6,7 @@ trigger:
     exclude:
     - docs/*
     - scripts/*
-    - ReadMe.md
+    - README.md
 
 name: 0.0.$(Build.BuildId)
 
