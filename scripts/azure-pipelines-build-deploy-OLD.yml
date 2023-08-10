@@ -1,21 +1,12 @@
 trigger:
   branches:
     include:
-    - main
     - deploy
   paths:
     exclude:
     - docs/*
     - scripts/*
     - README.md
-    
-schedules:
-- cron: '0 20 * * *'
-  displayName: 'daily'
-  branches:
-    include:
-    - main
-  always: true
 
 name: 0.0.$(Build.BuildId)
 
