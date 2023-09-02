@@ -1,6 +1,7 @@
 
-import { ViewModelBase, isBrowser } from '../../shared/ViewModelBase'
 import { ReportEntryRepository, ReportEntry, IReportEntryBaseState, setProperty, getLogger as createLogger } from 'model-client';
+import { ViewModelBase, isBrowser } from '../../shared/ViewModelBase'
+
 export { ReportEntry, setProperty, isBrowser };
 
 export type TransitionName = ('genesis' | 'loading' | 'loaded' | 'processing');
@@ -54,9 +55,9 @@ export class ViewModel extends ViewModelBase<ViewModel> {
     next.setNext('loaded', { details, current });
   }
 
-  public setCurrent = async (id: string): Promise<void> => {
+  public setCurrent = async (uuid: string): Promise<void> => {
     const details: Array<IReportEntryBaseState> = this.state['details'];
-    const detail: IReportEntryBaseState = details.find((d) => id === d.id);
+    const detail: IReportEntryBaseState = details.find((d) => uuid === d.uuid);
 
     const current = (await this._repository.get(detail.name, detail.version));
     this.setNext('loaded', { details, current });

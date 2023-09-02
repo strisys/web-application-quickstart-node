@@ -11,13 +11,12 @@ export class TaskRepository {
     return Task.from(states);
   }
 
-  public async getOne(id: string): Promise<Task> {
+  public async getOne(uuid: string): Promise<Task> {
     logger(`executing client call (url:=${getApiPath('tasks')}) to get one task ...`);
     const entities = (await this.get());
 
     // TODO: Move to server
-    const state = entities.find((c) => (c.id === id));
-    return ((state) ? (new Task(state)) : Task.null);
+    return (entities.find((c) => (c.uuid === uuid)) || Task.null);
   }
 
   public async post(entities: (Task | Task[])): Promise<Task[]> {

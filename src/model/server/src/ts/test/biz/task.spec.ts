@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Task, TaskRepositoryFactory, ITaskRepository, TaskRepositoryType, generateUuid } from '../../';
+import { Task, TaskRepositoryFactory, ITaskRepository, TaskRepositoryType, EntityUtil } from '../../';
 import { getLogger } from '../util';
 
 const logger = getLogger(module);
@@ -37,7 +37,7 @@ describe('TaskRepository', () => {
       const respository = (await getRepository('in-memory'));
       const length = (await respository.get()).length;
       const entity = new Task();
-      entity.description = generateUuid();
+      entity.description = EntityUtil.generate('uuid');
 
       // Act
       const result = (await respository.post([entity]));
@@ -60,10 +60,10 @@ describe('TaskRepository', () => {
       const postDeleteEntities = (await respository.get());
 
       // Assert
-      let exists = Boolean(postDeleteEntities.find((t) => (t.id === entities[0].id)));
+      let exists = Boolean(postDeleteEntities.find((t) => (t.uuid === entities[0].uuid)));
       expect(exists).to.be.false;
 
-      exists = Boolean(postDeleteEntities.find((t) => (t.id === entities[1].id)));
+      exists = Boolean(postDeleteEntities.find((t) => (t.uuid === entities[1].uuid)));
       expect(exists).to.be.true;
     });
   });
@@ -79,10 +79,10 @@ describe('TaskRepository', () => {
       const postDeleteEntities: Task[] = (await respository.get());
 
       // Assert
-      let exists = Boolean(postDeleteEntities.find((t) => (t.id === entities[0].id)));
+      let exists = Boolean(postDeleteEntities.find((t) => (t.uuid === entities[0].uuid)));
       expect(exists).to.be.false;
 
-      exists = Boolean(postDeleteEntities.find((t) => (t.id === entities[1].id)));
+      exists = Boolean(postDeleteEntities.find((t) => (t.uuid === entities[1].uuid)));
       expect(exists).to.be.true;
     });
   });

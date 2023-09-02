@@ -1,9 +1,9 @@
-import { Task, ITaskState, generateUuid, getLogger } from 'model-core';
+import { Task, ITaskState, EntityUtil, getLogger } from 'model-core';
 import { SqlClient, TokenCredentialOrNull, toCredential } from '../shared/sql-data-access';
 
 export { toCredential };
 export type TaskRepositoryType = ('in-memory' | 'sql-server');
-type TaskStateOmit = Omit<ITaskState, ('id' | 'uuid' | 'tags' | 'syncStatus')>;
+type TaskStateOmit = Omit<ITaskState, ('uuid' | 'name' | 'tags' | 'syncStatus' | 'documents')>;
 
 const taskDescriptions = ['Refactor App', 'Read About Frogs', 'Call Friend', 'Buy Groceries', 'Bake Cake', 'Eat Cake', 'Watch YouTube'];
 
@@ -12,9 +12,10 @@ let counter = 0;
 
 const generateFakeState = (data: TaskStateOmit): ITaskState => {
   return {
-    id: (++counter).toFixed(3).toString(),
-    uuid: generateUuid(),
+    uuid: EntityUtil.generate('uuid'),
+    name: EntityUtil.generate('uuid'),
     description: data.description,
+    documents: [],
     tags: {},
     syncStatus: 'sychronized'
   }
@@ -43,7 +44,7 @@ class TaskRepositoryInMemory implements ITaskRepository {
   public async getOne(id: string): Promise<Task> {
     logger(`fetching task (id:=${id}) from persistent store ...`);
 
-    const state = cache.find((c) => ((c.id === id) || (c.uuid === id)));
+    const state = cache.find((c) => ((c.uuid === id)));
     return ((state) ? (new Task(state)) : Task.null);
   }
 
@@ -71,11 +72,11 @@ class TaskRepositoryInMemory implements ITaskRepository {
       const index = cache.findIndex((i) => (i.uuid === e.uuid));
 
       if (index > -1) {
-        cache[index] = e;
+        cache[index] = e.state;
         return;
       }
 
-      cache.push(e);
+      cache.push(e.state);
     });
 
     return Promise.resolve(entities);
@@ -133,9 +134,10 @@ class TaskRepositorySql implements ITaskRepository {
   private async query(sql: string): Promise<Array<Task>> {
     const toState = (row: any): ITaskState => {
       return {
-        id: row.id,
         uuid: row.uuid,
+        name: row.id,
         description: row.description,
+        documents: [],
         syncStatus: 'sychronized',
         tags: {}
       }

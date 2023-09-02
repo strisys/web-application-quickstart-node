@@ -1,4 +1,4 @@
-import { IIdentity, generateUuid } from '../../biz';
+import { IIdentity, EntityUtil } from '../../biz';
 import { ISalesEntryState } from './sales-entry';
 
 export interface ISalesEntryQueryResultState extends IIdentity {
@@ -57,7 +57,7 @@ export class SalesEntryQueryResult {
     return {
       ...val,
       id: (val.id || emp.id),
-      uuid: (val.uuid || generateUuid()),
+      uuid: (val.uuid || EntityUtil.generate('uuid')),
       data: (val.data || emp.data),
     };
   }

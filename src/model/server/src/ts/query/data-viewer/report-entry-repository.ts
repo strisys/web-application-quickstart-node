@@ -14,7 +14,7 @@ data.forEach((d) => {
 
 export class ReportEntryRepository {
   public post(name: string, version: string, data: any): Promise<ReportEntry> {
-    const reportEntry = new ReportEntry({ name, version, data, id: '', uuid: '' });
+    const reportEntry = new ReportEntry({ name, version, data, uuid: '' });
     logger(`posting report entry (${reportEntry}) data set ... `);
     return Promise.resolve(reports[reportEntry.id] = reportEntry);
   }

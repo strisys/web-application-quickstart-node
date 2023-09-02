@@ -1,6 +1,8 @@
-import { expect } from 'chai';
+import { setup, expect } from './../../util';
 import { KEY_LENGTH } from '../../..';
 import * as sut from '../../../query/sales';
+
+setup();
 
 const data: sut.ISalesEntryState[] = [{
   id: '10248',

@@ -19,7 +19,7 @@ export class ReportEntryRepository {
   }
 
   public async post(reportName: string, version: string, data: any): Promise<ReportEntry> {
-    const reportEntry = new ReportEntry({ name: reportName, version, data, id: '', uuid: '' });
+    const reportEntry = new ReportEntry({ name: reportName, version, data, uuid: '' });
     const url = getUrl(reportName, version);
     logger(`posting report entry (${reportEntry}) data set to ${url} ... `);
     return this.hydrate((await execPostJson(url, reportEntry.state)));

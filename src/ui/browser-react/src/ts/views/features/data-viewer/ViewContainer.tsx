@@ -72,8 +72,8 @@ export function DataViewerSelect( {vm}: DataViewerSelectProps) {
 
     const menuItems = vm.details.map((state) => {
       return (
-        <MenuItem key={state.id} value={state.id}>
-          {state.id}
+        <MenuItem key={state.uuid} value={state.uuid}>
+          {state.name}
         </MenuItem>
       );
     })

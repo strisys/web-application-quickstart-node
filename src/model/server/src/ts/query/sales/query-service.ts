@@ -1,4 +1,4 @@
-import { SalesEntryQueryResult, ISalesEntryState, getLogger, KV, generateUuid } from 'model-core';
+import { SalesEntryQueryResult, ISalesEntryState, getLogger, KV, EntityUtil } from 'model-core';
 import { getData } from './data'
 
 const logger = getLogger('model.server:query:sales');
@@ -37,7 +37,7 @@ export class SalesEntryQueryService {
 
     return (new SalesEntryQueryResult({
       id: (++counter).toFixed(3).toString(),
-      uuid: generateUuid(),
+      uuid: EntityUtil.generate('uuid'),
       data: results
     }));
   }

@@ -14,6 +14,7 @@
     "clean-src-js": "rimraf ./src/js",
     "tsc": "tsc",
     "transpile": "npm-run-all clean-src-js tsc",
+    "t": "npm-run-all transpile",
     "webpack": "webpack-cli --mode=production --env analyze=false",
     "webpack-watch": "webpack-cli --mode=development --env analyze=false  --watch",
     "bundle-pre": "npm-run-all --parallel clean-build clean-public --sequential transpile",

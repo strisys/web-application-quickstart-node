@@ -1,9 +1,8 @@
 
-import { IIdentity, generateUuid } from '../../biz/entity';
+import { IIdentity, EntityUtil } from '../../biz/entity';
 import { KV } from '../../kv';
 
 export interface IReportEntryBaseState extends IIdentity {
-  id: string,
   name: string,
   version: string,
   description?: (string | null);
@@ -30,7 +29,7 @@ export class ReportEntry {
   }
 
   public get uuid(): string {
-    return (this._state.uuid || (this._state.uuid = generateUuid()));
+    return this._state.uuid;
   }
 
   public get data(): any {
@@ -67,7 +66,6 @@ export class ReportEntry {
 
   public static get emptyState(): Readonly<IReportEntryState> {
     return (ReportEntry._emptyState || (ReportEntry._emptyState = Object.freeze({
-      id: '',
       uuid: '',
       name: '',
       version: '',
@@ -83,8 +81,7 @@ export class ReportEntry {
 
     return {
       ...val,
-      id: (val.id || ReportEntry.toKey(val.name, val.version)),
-      uuid: (val.uuid || generateUuid()),
+      uuid: (val.uuid || EntityUtil.generate('uuid')),
       name: (val.name || emp.name),
       version: (val.version || emp.version),
       description: (val.description || emp.description),

@@ -1,12 +1,14 @@
-import { expect } from 'chai';
+import { setup, expect } from './../../util';
 import { KEY_LENGTH } from '../../..';
 import * as sut from '../../../query/data-viewer';
+
+setup();
 
 describe('ReportEntry', () => {
   describe('constructor', function () {
     it('should contain the expected state', async () => {
       // Assemble/Arrange
-      const state: sut.IReportEntryState = { name: 'stocks', version: '1.0', id: '', uuid: '', data: {} };
+      const state: sut.IReportEntryState = { name: 'stocks', version: '1.0', uuid: '', data: {} };
       const entity = new sut.ReportEntry(state)
 
       // Assert
