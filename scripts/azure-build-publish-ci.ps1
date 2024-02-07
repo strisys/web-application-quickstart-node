@@ -22,7 +22,7 @@ $image_name_full = $registry_name_full + '/' + $image_name
 $web_app_url_dev = 'https://' + $web_app_name + '-development.azurewebsites.net'
 
 $is_release = ($Env:BUILD_SOURCEBRANCHNAME -eq 'deploy')
-$no_push_option = '--no-push'
+$no_push_option = ' --no-push'
 
 if ($is_release) {
     Write-Host "This is a deployment build (source branch:=$Env:BUILD_SOURCEBRANCHNAME)"
@@ -31,7 +31,7 @@ if ($is_release) {
 if ($is_release) {$no_push_option = ''} 
 
 Write-Host "`n[image:=$image_name, registry:=$registry_name_full, repository:=$repository_name, branch:=$Env:BUILD_SOURCEBRANCHNAME, is_release:=$is_release, no_push_option:=$no_push_option] ..."
-az acr build --registry $registry_name --image $image_name --file ../Dockerfile-App ../ --platform linux --build-arg AZURE_CLIENT_ID=$env:servicePrincipalId --build-arg AZURE_CLIENT_SECRET=$env:servicePrincipalKey $no_push_option
+az acr build --registry $registry_name --image $image_name --file ../Dockerfile-App ../ --platform linux --build-arg AZURE_CLIENT_ID=$env:servicePrincipalId --build-arg AZURE_CLIENT_SECRET=$env:servicePrincipalKey$no_push_option
 
 if ($is_release) {
     az acr import -n $registry_name --source $image_name_full -t $image_name_latest --force

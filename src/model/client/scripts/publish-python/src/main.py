@@ -8,7 +8,7 @@ def compute(large):
 
 
 def submit():
-    environment = 'development-local'
+    environment = 'development-azure'
 
     client = PublicationClient(environment)
     credential = client.getInteractiveBrowserCredential()
